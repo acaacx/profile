@@ -13,7 +13,7 @@ function CostCalculator() {
   const [teamSize, setTeamSize] = useState(3);
   const [hourlyRate, setHourlyRate] = useState(100);
   const [wastePercent] = useState(35);
-  const [currency, setCurrency] = useState<'USD' | 'EUR' | 'CHF'>('USD');
+  const [currency, setCurrency] = useState<'USD' | 'EUR' | 'JPY'>('USD');
 
   const results = useMemo(() => {
     const vpaSavings = Math.round(computeBill * 1000 * 0.259 * 12);
@@ -40,7 +40,7 @@ function CostCalculator() {
   }, [clusters, computeBill, teamSize, hourlyRate, wastePercent]);
 
   const formatCurrency = (val: number) => {
-    const sym = currency === 'USD' ? '$' : currency === 'EUR' ? '\u20AC' : 'CHF ';
+    const sym = currency === 'USD' ? '$' : currency === 'EUR' ? '\u20AC' : '\u00A5';
     if (val >= 1000) return `${sym}${(val / 1000).toFixed(0)}K`;
     return `${sym}${val}`;
   };
@@ -63,7 +63,7 @@ function CostCalculator() {
 
       {/* Currency Toggle */}
       <div className="flex gap-2 mb-6">
-        {(['USD', 'EUR', 'CHF'] as const).map((c) => (
+        {(['USD', 'EUR', 'JPY'] as const).map((c) => (
           <button
             key={c}
             onClick={() => setCurrency(c)}

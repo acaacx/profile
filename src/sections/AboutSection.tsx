@@ -103,15 +103,6 @@ export default function AboutSection() {
               >
                 GitHub
               </a>
-              <a
-                href="mailto:ab.acaac@gmail.com"
-                className="inline-flex items-center px-4 py-2 text-[13px] rounded-full transition-all duration-300 border"
-                style={{ borderColor: 'rgba(255,255,255,0.12)', color: '#E8E8EC' }}
-                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.3)'; }}
-                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.12)'; }}
-              >
-                ab.acaac@gmail.com
-              </a>
             </div>
           </div>
 

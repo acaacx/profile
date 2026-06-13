@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -6,7 +6,6 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function ContactSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     const el = sectionRef.current;
@@ -15,7 +14,6 @@ export default function ContactSection() {
     const heading = el.querySelector('.contact-heading');
     const subtext = el.querySelector('.contact-subtext');
     const ctas = el.querySelectorAll('.contact-cta');
-    const email = el.querySelector('.contact-email');
 
     const tl = gsap.timeline({
       scrollTrigger: {
@@ -35,21 +33,10 @@ export default function ContactSection() {
 
     tl.from(ctas, { y: 15, opacity: 0, duration: 0.5, stagger: 0.1, ease: 'power2.out' }, 0.4);
 
-    if (email) {
-      tl.from(email, { y: 10, opacity: 0, duration: 0.5, ease: 'power2.out' }, 0.6);
-    }
-
     return () => {
       tl.kill();
     };
   }, []);
-
-  const handleCopyEmail = () => {
-    navigator.clipboard.writeText('ab.acaac@gmail.com').then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    });
-  };
 
   return (
     <section
@@ -92,17 +79,6 @@ export default function ContactSection() {
           </a>
         </div>
 
-        <button
-          onClick={handleCopyEmail}
-          className="contact-email mt-8 inline-flex items-center gap-2 text-[14px] font-mono transition-colors duration-200"
-          style={{ color: copied ? '#4ade80' : 'rgba(255,255,255,0.3)' }}
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-            <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
-          </svg>
-          {copied ? 'Copied!' : 'ab.acaac@gmail.com'}
-        </button>
       </div>
     </section>
   );
