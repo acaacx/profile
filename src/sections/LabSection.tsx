@@ -380,14 +380,70 @@ function CIPipeline() {
 }
 
 // Kubectl Terminal Component
+type PodStatus = 'Running' | 'Terminating' | 'ContainerCreating';
+interface Pod {
+  id: number;
+  name: string;
+  status: PodStatus;
+  cpu: number;
+  uptime: string;
+}
+
+const POD_STATUS_COLOR: Record<PodStatus, string> = {
+  Running: '#4ade80',
+  Terminating: '#ef4444',
+  ContainerCreating: '#fbbf24',
+};
+
 function KubectlTerminal() {
   const [activeTab, setActiveTab] = useState<'pods' | 'hpa' | 'svc' | 'events'>('pods');
-  const [pods, setPods] = useState([
-    { name: 'web-app-0', status: 'Running', cpu: 53, uptime: '2h22m' },
-    { name: 'web-app-1', status: 'Running', cpu: 45, uptime: '1h28m' },
-    { name: 'web-app-2', status: 'Running', cpu: 38, uptime: '52m' },
-    { name: 'metrics-0', status: 'Running', cpu: 14, uptime: '20h15m' },
+  const [pods, setPods] = useState<Pod[]>([
+    { id: 0, name: 'web-app-0', status: 'Running', cpu: 53, uptime: '2h22m' },
+    { id: 1, name: 'web-app-1', status: 'Running', cpu: 45, uptime: '1h28m' },
+    { id: 2, name: 'web-app-2', status: 'Running', cpu: 38, uptime: '52m' },
+    { id: 3, name: 'metrics-0', status: 'Running', cpu: 14, uptime: '20h15m' },
   ]);
+
+  // Monotonic id + web-app replica suffix so respawned pods never collide.
+  const nextId = useRef(4);
+  const nextSuffix = useRef(3);
+  // Track pending timers to clear on unmount (avoid setState after unmount).
+  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  useEffect(() => {
+    const t = timers.current;
+    return () => {
+      t.forEach(clearTimeout);
+    };
+  }, []);
+
+  const schedule = (fn: () => void, ms: number) => {
+    const handle = setTimeout(fn, ms);
+    timers.current.push(handle);
+  };
+
+  const spawnReplica = () => {
+    const id = nextId.current++;
+    const suffix = nextSuffix.current++;
+    const newPod: Pod = {
+      id,
+      name: `web-app-${suffix}`,
+      status: 'ContainerCreating',
+      cpu: 0,
+      uptime: '0s',
+    };
+    setPods((prev) => [...prev, newPod]);
+    // ContainerCreating -> Running, like the ReplicaSet bringing it up.
+    schedule(() => {
+      setPods((prev) =>
+        prev.map((p) =>
+          p.id === id
+            ? { ...p, status: 'Running', cpu: Math.floor(Math.random() * 60) + 10, uptime: '5s' }
+            : p,
+        ),
+      );
+    }, 1100);
+  };
 
   const tabs: Array<{ key: typeof activeTab; label: string }> = [
     { key: 'pods', label: 'pods' },
@@ -396,27 +452,33 @@ function KubectlTerminal() {
     { key: 'events', label: 'events' },
   ];
 
+  // Kill: mark a running web-app pod Terminating, remove it, then the
+  // controller spawns a fresh replica to restore desired count (self-healing).
   const handleKillPod = () => {
-    if (pods.length > 1) {
-      setPods(pods.slice(0, -1));
-    }
+    const victim = [...pods].reverse().find((p) => p.name.startsWith('web-app') && p.status === 'Running');
+    if (!victim) return;
+    setPods((prev) => prev.map((p) => (p.id === victim.id ? { ...p, status: 'Terminating', cpu: 0 } : p)));
+    schedule(() => {
+      setPods((prev) => prev.filter((p) => p.id !== victim.id));
+      spawnReplica();
+    }, 900);
   };
 
   const handleScaleUp = () => {
-    const newIndex = pods.length;
-    setPods([...pods, {
-      name: `web-app-${newIndex}`,
-      status: 'Running',
-      cpu: Math.floor(Math.random() * 60) + 10,
-      uptime: '0m',
-    }]);
+    spawnReplica();
   };
 
   const handleScaleDown = () => {
-    if (pods.length > 1) {
-      setPods(pods.slice(0, -1));
-    }
+    const victim = [...pods].reverse().find((p) => p.name.startsWith('web-app') && p.status === 'Running');
+    if (!victim) return;
+    // Scale down is a real desired-count drop: terminate, no respawn.
+    setPods((prev) => prev.map((p) => (p.id === victim.id ? { ...p, status: 'Terminating', cpu: 0 } : p)));
+    schedule(() => {
+      setPods((prev) => prev.filter((p) => p.id !== victim.id));
+    }, 900);
   };
+
+  const runningCount = pods.filter((p) => p.status === 'Running').length;
 
   return (
     <GlassCard className="p-6">
@@ -425,8 +487,11 @@ function KubectlTerminal() {
           <p className="text-[13px] font-medium text-[#E8E8EC]">kubectl get all</p>
           <p className="text-[11px]" style={{ color: 'rgba(255,255,255,0.3)' }}>kubernetes &middot; ns/default</p>
         </div>
-        <span className="text-[12px] font-medium" style={{ color: '#4ade80' }}>
-          {pods.length}/{pods.length} Running
+        <span
+          className="text-[12px] font-medium"
+          style={{ color: runningCount === pods.length ? '#4ade80' : '#fbbf24' }}
+        >
+          {runningCount}/{pods.length} Running
         </span>
       </div>
 
@@ -452,11 +517,14 @@ function KubectlTerminal() {
         <div className="space-y-2 mb-4">
           {pods.map((pod) => (
             <div
-              key={pod.name}
-              className="flex items-center gap-3 py-2 px-3 rounded-md"
-              style={{ background: 'rgba(255,255,255,0.02)' }}
+              key={pod.id}
+              className="flex items-center gap-3 py-2 px-3 rounded-md transition-all duration-300"
+              style={{ background: 'rgba(255,255,255,0.02)', opacity: pod.status === 'Terminating' ? 0.45 : 1 }}
             >
-              <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: '#4ade80' }} />
+              <div
+                className={`w-2 h-2 rounded-full flex-shrink-0 ${pod.status === 'Running' ? '' : 'animate-pulse'}`}
+                style={{ background: POD_STATUS_COLOR[pod.status] }}
+              />
               <span className="text-[12px] font-mono text-[#E8E8EC] flex-1">{pod.name}</span>
               <span className="text-[11px]" style={{ color: 'rgba(255,255,255,0.4)' }}>{pod.status}</span>
               <span className="text-[11px] font-mono" style={{ color: 'rgba(255,255,255,0.3)' }}>{pod.cpu}m CPU</span>
@@ -580,6 +648,48 @@ function GoldenSignalsDashboard() {
   );
 }
 
+// Agentic CI/CD Evaluation Gate Showcase (embedded standalone demo)
+function EvalGateShowcase() {
+  return (
+    <GlassCard className="p-3 md:p-4">
+      <div className="flex items-center gap-2 mb-3 px-1">
+        <div className="flex gap-1.5">
+          <div className="w-3 h-3 rounded-full" style={{ background: '#ff5f57' }} />
+          <div className="w-3 h-3 rounded-full" style={{ background: '#febc2e' }} />
+          <div className="w-3 h-3 rounded-full" style={{ background: '#28c840' }} />
+        </div>
+        <span className="font-mono-label ml-2" style={{ color: 'rgba(255,255,255,0.35)' }}>
+          agentic-cicd-eval-gate
+        </span>
+        <a
+          href="/showcase/agentic-cicd-gate/"
+          target="_blank"
+          rel="noreferrer"
+          className="ml-auto text-[11px] transition-colors duration-200 hover:text-white"
+          style={{ color: 'rgba(255,255,255,0.35)' }}
+        >
+          open full &#8599;
+        </a>
+      </div>
+      <div
+        className="rounded-xl overflow-hidden"
+        style={{ border: '1px solid rgba(255,255,255,0.06)' }}
+      >
+        <iframe
+          src="/showcase/agentic-cicd-gate/"
+          title="Agentic CI/CD Automated Evaluation Gate Showcase"
+          loading="lazy"
+          className="w-full block"
+          style={{ height: 'min(80vh, 760px)', border: 'none', background: '#0a0a0e' }}
+        />
+      </div>
+      <p className="text-[10px] mt-3 text-center" style={{ color: 'rgba(255,255,255,0.2)' }}>
+        golden datasets &middot; trajectory + ROUGE-L eval &middot; pass/fail promotion gate
+      </p>
+    </GlassCard>
+  );
+}
+
 // Main Lab Section
 export default function LabSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -654,6 +764,9 @@ export default function LabSection() {
             </div>
             <div className="lab-card">
               <GoldenSignalsDashboard />
+            </div>
+            <div className="lab-card">
+              <EvalGateShowcase />
             </div>
           </div>
         </div>
