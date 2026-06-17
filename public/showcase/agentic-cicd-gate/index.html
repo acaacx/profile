@@ -10,7 +10,7 @@
   <link href="./fonts.css" rel="stylesheet">
   <link rel="stylesheet" href="./styles.css">
 </head>
-<body class="state-running">
+<body>
   <!-- Ambient background effects -->
   <div class="bg-grid"></div>
   <div class="glow-orb orb-1"></div>
@@ -74,7 +74,7 @@
           </div>
 
           <div class="action-buttons">
-            <button id="btn-trigger" class="btn btn-primary" disabled="">
+            <button id="btn-trigger" class="btn btn-primary">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
               Run Pipeline
             </button>
@@ -309,86 +309,6 @@
             <div class="terminal-line system-msg"># Automated Evaluation Gate Simulation ready.</div>
             <div class="terminal-line system-msg"># Select your settings above and click "Run Pipeline" to begin.</div>
             <div class="terminal-line log-main"><span class="prompt">$</span><span class="cmd-text">git push origin main</span></div><div class="terminal-line log-info">Enumerating objects: 7, done.</div><div class="terminal-line log-info">Counting objects: 100% (7/7), done.</div><div class="terminal-line log-info">Writing objects: 100% (4/4), 1.28 KiB, done.</div><div class="terminal-line log-info">To github.com:alaric/autonomous-agent.git</div><div class="terminal-line log-info">   d512a84..f34e891  main -&gt; main</div><div class="terminal-line log-info">[webhook] GitHub pushed notification received.</div><div class="terminal-line log-info">[ci-runner] Starting pipeline build #42291</div><div class="terminal-line log-info">[ci-runner] Pulling repository source code...</div><div class="terminal-line log-info">[ci-runner] Provisioning isolated test runner container...</div><div class="terminal-line log-info">[ci-runner] Mounting virtual tools and agent credentials.</div><div class="terminal-line log-main"><span class="prompt">$</span><span class="cmd-text">python3 test_agent_eval.py --dataset=tests/golden_dataset.json</span></div><div class="terminal-line log-info">[evaluator] ADK testing gate initializing...</div><div class="terminal-line log-info">[evaluator] Loading Agent script logic: `src/agents/reasoning.py`</div><div class="terminal-line log-success">[evaluator] Code integrity check: PASSED (sha256 matches)</div><div class="terminal-line log-info">[evaluator] Initializing Golden Dataset benchmarks (10 Scenarios)...</div><div class="terminal-line log-success">Scenario 1: Task completed. Trajectory: 88%, ROUGE: 91% -&gt; PASSED</div><div class="terminal-line log-success">Scenario 2: Task completed. Trajectory: 90%, ROUGE: 90% -&gt; PASSED</div><div class="terminal-line log-success">Scenario 3: Task completed. Trajectory: 88%, ROUGE: 92% -&gt; PASSED</div><div class="terminal-line log-success">Scenario 4: Task completed. Trajectory: 89%, ROUGE: 93% -&gt; PASSED</div><div class="terminal-line log-success">Scenario 5: Task completed. Trajectory: 90%, ROUGE: 93% -&gt; PASSED</div><div class="terminal-line log-success">Scenario 6: Task completed. Trajectory: 89%, ROUGE: 88% -&gt; PASSED</div><div class="terminal-line log-success">Scenario 7: Task completed. Trajectory: 87%, ROUGE: 90% -&gt; PASSED</div><div class="terminal-line log-success">Scenario 8: Task completed. Trajectory: 89%, ROUGE: 92% -&gt; PASSED</div><div class="terminal-line log-success">Scenario 9: Task completed. Trajectory: 91%, ROUGE: 91% -&gt; PASSED</div><div class="terminal-line log-success">Scenario 10: Task completed. Trajectory: 90%, ROUGE: 93% -&gt; PASSED</div><div class="terminal-line log-info">[evaluator] Aggregating overall dataset statistics...</div><div class="terminal-line log-info">[evaluator] Evaluator Results Aggregate:</div><div class="terminal-line log-info">  - Average Trajectory overlap: 94%</div><div class="terminal-line log-info">  - Average ROUGE-L similarity: 90%</div><div class="terminal-line log-success">  - Composite Performance Score: 92%</div><div class="terminal-line log-info">  - Required Quality Threshold: 85%</div><div class="terminal-line log-success">[evaluator] Score exceeds threshold. Exiting status: 0 (SUCCESS)</div><div class="terminal-line log-info">[ci-runner] Testing completed. Proceeding to production deploy.</div><div class="terminal-line log-info">[ci-runner] Pushing artifact to container registry...</div><div class="terminal-line log-info">[ci-runner] Running deployment manifest...</div><div class="terminal-line log-success">[ci-runner] Deploy successful! Agent is active in Production cloud.</div><div class="terminal-line log-system">--- Presentation Triggered: Step 1 (Git Push) ---</div><div class="terminal-line log-main"><span class="prompt">$</span><span class="cmd-text">git push origin main</span></div><div class="terminal-line log-info">Counting objects: 100% (7/7), done.</div><div class="terminal-line log-info">Writing objects: 100% (4/4), 1.28 KiB, done.</div><div class="terminal-line cursor-line"><span class="prompt">$</span><span class="cursor">_</span></div>
-          </div>
-        </div>
-
-        <!-- Interview Slide Playbook -->
-        <div class="card glass interview-playbook-card">
-          <div class="card-header">
-            <h3>Interview Presentation Mode</h3>
-            <span class="badge badge-accent">Speaking Points</span>
-          </div>
-          
-          <div class="slides-container">
-            <!-- Slide index tracking -->
-            <div class="slides-nav">
-              <button id="slide-prev" class="btn-icon" disabled="">←</button>
-              <span class="slide-indicator">Slide <span id="current-slide-num">1</span> of 5</span>
-              <button id="slide-next-btn" class="btn-icon">→</button>
-            </div>
-
-            <!-- Slides List -->
-            <div class="slide-deck">
-              <!-- Slide 1: Introduction -->
-              <div class="slide active" id="slide-1">
-                <h4>1. Deterministic vs. Agentic Testing</h4>
-                <p>LLM agents are non-deterministic. Static assertions fail to validate multi-step agent behaviors. Our pipeline executes the agent codebase inside isolated runtimes to assess runtime pathing and tool calls before integration.</p>
-                <div class="bullet-tips">
-                  <span class="tip-tag">Core Concept</span> <em>Non-deterministic pathing</em>: Agents can resolve the same goal via different tool combinations.
-                </div>
-              </div>
-
-              <!-- Slide 2: Trajectory Auditing -->
-              <div class="slide" id="slide-2">
-                <h4>2. Auditing Tool Trajectories</h4>
-                <p>If an agent resolves a task (e.g., patching a file), standard tests only verify the final file state. They miss pipeline-breaking behaviors: infinite loops, security policy violations (e.g., executing unvetted bash commands), or runaway API costs.</p>
-                <div class="bullet-tips">
-                  <span class="tip-tag">Solution</span> We monitor the exact sequence and parameters of tool calls (**Execution Trajectory**).
-                </div>
-              </div>
-
-              <!-- Slide 3: Golden Dataset Execution -->
-              <div class="slide" id="slide-3">
-                <h4>3. Golden Dataset Sandbox</h4>
-                <p>We maintain a version-controlled benchmark of 10 to 100 historical edge cases. The pipeline provisions ephemeral container environments with mocked datastores and fixed API budgets, running the agent suite in parallel.</p>
-                <div class="bullet-tips">
-                  <span class="tip-tag">Goal</span> Standardized, repeatable regression tests run with zero access to production systems.
-                </div>
-              </div>
-
-              <!-- Slide 4: Quantitative Scoring Metrics -->
-              <div class="slide" id="slide-4">
-                <h4>4. Scoring Engine Metrics</h4>
-                <p>The evaluator outputs two primary signals:
-                  </p><ul>
-                    <li><strong>Trajectory Overlap</strong>: Graph similarity of the agent's actions compared to reference trajectories.</li>
-                    <li><strong>Accuracy / ROUGE-L</strong>: Lexical and semantic overlap of the agent's final output against reference outputs.</li>
-                  </ul>
-                <p></p>
-                <div class="bullet-tips">
-                  <span class="tip-tag">Gate check</span> A weighted combination of both metrics determines the final quality score.
-                </div>
-              </div>
-
-              <!-- Slide 5: The Deployment Gate -->
-              <div class="slide" id="slide-5">
-                <h4>5. Automated Release Decision</h4>
-                <p>Conditional pipeline routing:
-                  </p><ul>
-                    <li><strong>Score &lt; Threshold</strong>: Evaluator container exits with Code 1. Cloud Build halts the release and flags the GitHub PR check as failed.</li>
-                    <li><strong>Score &gt;= Threshold</strong>: Evaluator container exits with Code 0. Cloud Build packages the agent and rolls it out to Production Cloud Run.</li>
-                  </ul>
-                <p></p>
-                <div class="bullet-tips">
-                  <span class="tip-tag">Result</span> Empirically gates agent releases against regression and safety violations.
-                </div>
-              </div>
-            </div>
-
-            <!-- Dynamic slide trigger button -->
-            <button id="btn-demo-slide" class="btn btn-accent w-full mt-3">
-              🚀 Simulate This Step in Diagram
-            </button>
           </div>
         </div>
 

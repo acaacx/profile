@@ -107,11 +107,6 @@ function setupEventListeners() {
       <div class="terminal-line cursor-line"><span class="prompt">$</span><span class="cursor">_</span></div>
     `;
   });
-
-  // Slide Deck Actions
-  el.slidePrev.addEventListener('click', () => changeSlide(-1));
-  el.slideNext.addEventListener('click', () => changeSlide(1));
-  el.btnDemoSlide.addEventListener('click', demoSlideBehavior);
 }
 
 // Show/Hide Agent Slider based on chosen scenario
