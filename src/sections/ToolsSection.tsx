@@ -18,16 +18,16 @@ const TOOL_CATEGORIES: ToolCategory[] = [
       { name: 'Docker', icon: 'https://cdn.simpleicons.org/docker/ffffff' },
       { name: 'Helm', icon: 'https://cdn.simpleicons.org/helm/ffffff' },
       { name: 'Argo CD', icon: 'https://cdn.simpleicons.org/argo/ffffff' },
-      { name: 'Traefik', icon: 'https://cdn.simpleicons.org/traefik/ffffff' },
+      { name: 'Traefik', icon: 'https://cdn.simpleicons.org/traefikproxy/ffffff' },
     ],
   },
   {
     name: 'Cloud & Platforms',
     tools: [
-      { name: 'AWS', icon: 'https://cdn.simpleicons.org/amazonwebservices/ffffff' },
+      { name: 'AWS', icon: 'https://api.iconify.design/simple-icons/amazonwebservices.svg?color=white' },
       { name: 'GCP', icon: 'https://cdn.simpleicons.org/googlecloud/ffffff' },
-      { name: 'Azure', icon: 'https://cdn.simpleicons.org/microsoftazure/ffffff' },
-      { name: 'Linode', icon: 'https://cdn.simpleicons.org/linode/ffffff' },
+      { name: 'Azure', icon: 'https://api.iconify.design/simple-icons/microsoftazure.svg?color=white' },
+      { name: 'Linode', icon: 'https://api.iconify.design/logos/linode.svg' },
     ],
   },
   {
