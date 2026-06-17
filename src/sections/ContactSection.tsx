@@ -31,7 +31,12 @@ export default function ContactSection() {
       tl.from(subtext, { y: 20, opacity: 0, duration: 0.6, ease: 'power2.out' }, 0.2);
     }
 
-    tl.from(ctas, { y: 15, opacity: 0, duration: 0.5, stagger: 0.1, ease: 'power2.out' }, 0.4);
+    tl.fromTo(
+      ctas,
+      { y: 15, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.5, stagger: 0.1, ease: 'power2.out', clearProps: 'opacity,transform' },
+      0.4
+    );
 
     return () => {
       tl.kill();
