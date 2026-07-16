@@ -7,7 +7,6 @@ import AboutSection from './sections/AboutSection';
 import ExperienceSection from './sections/ExperienceSection';
 import LabSection from './sections/LabSection';
 import ProjectsSection from './sections/ProjectsSection';
-import ToolsSection from './sections/ToolsSection';
 import ContactSection from './sections/ContactSection';
 
 function App() {
@@ -28,7 +27,6 @@ function App() {
         <ExperienceSection />
         <LabSection />
         <ProjectsSection />
-        <ToolsSection />
         <ContactSection />
       </main>
 

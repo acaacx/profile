@@ -17,7 +17,7 @@ interface ExperienceItem {
 
 const EXPERIENCE: ExperienceItem[] = [
   {
-    title: 'Platform Engineer / Site Reliability Engineer',
+    title: 'Site Reliability Engineer',
     company: 'Hydrolix',
     period: 'Jun 2024 \u2013 May 2026',
     location: 'Remote',
@@ -34,7 +34,7 @@ const EXPERIENCE: ExperienceItem[] = [
     tags: ['Kubernetes', 'ArgoCD', 'Pulumi', 'Terraform', 'Prometheus', 'Grafana', 'CloudNativePG', 'Python', 'Go'],
   },
   {
-    title: 'DevSecOps Engineer / Site Reliability Engineer',
+    title: 'DevSecOps Engineer',
     company: 'Omilia',
     period: 'Oct 2022 \u2013 Mar 2024',
     location: 'Remote / EMEA',
@@ -50,7 +50,7 @@ const EXPERIENCE: ExperienceItem[] = [
     tags: ['AWS', 'Docker Swarm', 'Terraform', 'ELK Stack', 'Jenkins', 'GitLab', 'Prometheus', 'Grafana'],
   },
   {
-    title: 'Senior DevOps / SRE Engineer',
+    title: 'Senior DevOps Engineer',
     company: 'Asurion',
     period: 'Oct 2017 \u2013 Oct 2022',
     location: 'Manila',
