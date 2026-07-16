@@ -33,6 +33,18 @@ const PROJECTS: Project[] = [
     tags: ['Pulumi', 'ArgoCD', 'EKS / LKE / AKS', 'Grafana', 'CNPG', 'GitHub Actions'],
   },
   {
+    badge: 'tfsec Security Gate',
+    badgeGradient: 'linear-gradient(135deg, #3d7c4a 0%, #6fa877 100%)',
+    image: '/images/project-security.svg',
+    company: 'Omilia',
+    year: '2024',
+    title: 'Security Team IaC Pipelines',
+    problem: 'Security tooling (DefectDojo vulnerability management, NVD vulnerability mirror, network security baseline) had no standardised deploy pipeline, and Terraform changes shipped with no automated security scanning.',
+    solution: 'Built Jenkins Job DSL pipelines backed by a shared Groovy library (AwsCloud / AzureCloud / TfCloudParams) to provision AWS infrastructure for security tooling via GitLab MR-triggered plan/apply workflows. Added a tfsec scanning stage to the NVD mirror pipeline, gating merges on Terraform misconfigurations.',
+    outcome: 'Standardised multi-env (dev/prod) provisioning across 4+ security-team pipelines. Delivered the first automated security scanning gate on Terraform changes for the security org.',
+    tags: ['Jenkins', 'Groovy DSL', 'Terraform', 'GitLab CI', 'tfsec', 'AWS'],
+  },
+  {
     badge: '3\u20135\u00d7 deployment freq',
     badgeGradient: 'linear-gradient(135deg, #7c6f64 0%, #a89f91 100%)',
     image: '/images/project-cicd.jpg',

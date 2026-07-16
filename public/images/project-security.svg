@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1344 756" width="1344" height="756">
+  <defs>
+    <radialGradient id="bgGlow" cx="50%" cy="35%" r="75%">
+      <stop offset="0%" stop-color="#0d1a14"/>
+      <stop offset="100%" stop-color="#070c14"/>
+    </radialGradient>
+    <linearGradient id="nodeTop" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6fa877"/>
+      <stop offset="100%" stop-color="#3d7c4a"/>
+    </linearGradient>
+    <linearGradient id="nodeSide" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#2a5a37"/>
+      <stop offset="100%" stop-color="#1c3f26"/>
+    </linearGradient>
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1344" height="756" fill="url(#bgGlow)"/>
+
+  <!-- isometric node helper: ellipse top + rect-ish side -->
+  <g id="path">
+    <!-- connecting arrows (amber, glowing) -->
+    <g stroke="#f0a94e" stroke-width="4" fill="none" opacity="0.9" filter="url(#glow)">
+      <path d="M300,470 C360,430 400,430 450,400" marker-end="url(#arrow)"/>
+      <path d="M480,390 C540,350 580,350 630,330" marker-end="url(#arrow)"/>
+      <path d="M660,320 C720,300 760,320 800,360" marker-end="url(#arrow)"/>
+      <path d="M830,375 C890,410 930,400 990,360" marker-end="url(#arrow)"/>
+      <path d="M1020,345 C1060,320 1080,300 1100,280" marker-end="url(#arrow)"/>
+    </g>
+
+    <defs>
+      <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="#f0a94e"/>
+      </marker>
+    </defs>
+
+    <!-- nodes: stacked ellipses to fake isometric coins -->
+    <g>
+      <ellipse cx="270" cy="490" rx="46" ry="20" fill="url(#nodeSide)"/>
+      <ellipse cx="270" cy="478" rx="46" ry="20" fill="url(#nodeTop)"/>
+    </g>
+    <g>
+      <ellipse cx="460" cy="400" rx="46" ry="20" fill="url(#nodeSide)"/>
+      <ellipse cx="460" cy="388" rx="46" ry="20" fill="url(#nodeTop)"/>
+    </g>
+    <g>
+      <ellipse cx="650" cy="325" rx="46" ry="20" fill="url(#nodeSide)"/>
+      <ellipse cx="650" cy="313" rx="46" ry="20" fill="url(#nodeTop)"/>
+    </g>
+    <g>
+      <ellipse cx="810" cy="365" rx="46" ry="20" fill="url(#nodeSide)"/>
+      <ellipse cx="810" cy="353" rx="46" ry="20" fill="url(#nodeTop)"/>
+    </g>
+    <g>
+      <ellipse cx="1005" cy="350" rx="46" ry="20" fill="url(#nodeSide)"/>
+      <ellipse cx="1005" cy="338" rx="46" ry="20" fill="url(#nodeTop)"/>
+    </g>
+    <g>
+      <ellipse cx="1115" cy="270" rx="46" ry="20" fill="url(#nodeSide)"/>
+      <ellipse cx="1115" cy="258" rx="46" ry="20" fill="url(#nodeTop)"/>
+    </g>
+  </g>
+
+  <!-- shield-check glyph over the scan node, signalling security gate -->
+  <g transform="translate(650,235)" filter="url(#glow)">
+    <path d="M0,-34 L28,-22 L28,4 C28,26 14,40 0,46 C-14,40 -28,26 -28,4 L-28,-22 Z"
+          fill="none" stroke="#8fe3a4" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M-12,2 L-2,14 L16,-10" fill="none" stroke="#8fe3a4" stroke-width="4"
+          stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- labels -->
+  <g font-family="monospace" font-size="15" fill="#f0a94e" filter="url(#glow)" letter-spacing="1">
+    <text x="220" y="530">CHECKOUT</text>
+    <text x="600" y="195">TFSEC SCAN</text>
+    <text x="760" y="410">PLAN</text>
+    <text x="960" y="400">APPLY</text>
+    <text x="1060" y="240">MONITOR</text>
+  </g>
+</svg>
