@@ -12,7 +12,7 @@ export default function Footer() {
               Alaric Acaac
             </p>
             <p className="text-[12px] text-secondary mt-1">
-              Senior Site Reliability Engineer
+              DevSecOps/SRE
             </p>
           </div>
           <div className="flex items-center gap-6">
