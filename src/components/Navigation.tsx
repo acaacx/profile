@@ -1,7 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router';
-import { NAV_ITEMS, getNavigationHref, type NavItem } from '../lib/navigation';
+import {
+  NAV_ITEMS,
+  getNavigationHref,
+  isUnmodifiedPrimaryClick,
+  type NavItem,
+} from '../lib/navigation';
 
 export default function Navigation() {
   const menuButtonRef = useRef<HTMLButtonElement>(null);
@@ -58,6 +63,8 @@ export default function Navigation() {
   };
 
   const handleNavigation = (event: React.MouseEvent<HTMLAnchorElement>, item: NavItem) => {
+    if (!isUnmodifiedPrimaryClick(event)) return;
+
     const href = getNavigationHref(location.pathname, item);
 
     if (item.kind === 'section' && location.pathname === '/') {
@@ -109,6 +116,7 @@ export default function Navigation() {
           href="/"
           className="font-display text-[20px] text-[#E8E8EC] tracking-normal rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a89f91]"
           onClick={(event) => {
+            if (!isUnmodifiedPrimaryClick(event)) return;
             event.preventDefault();
             if (location.pathname === '/') {
               window.scrollTo({

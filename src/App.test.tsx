@@ -25,7 +25,8 @@ describe('PortfolioRoutes', () => {
 
   it('resets Lenis to the top when a route has no hash', async () => {
     const scrollTo = vi.fn();
-    const lenisRef = { current: { scrollTo } };
+    const resize = vi.fn();
+    const lenisRef = { current: { resize, scrollTo } };
 
     render(
       <MemoryRouter initialEntries={['/interactive']}>
@@ -34,6 +35,7 @@ describe('PortfolioRoutes', () => {
     );
 
     await waitFor(() => {
+      expect(resize).toHaveBeenCalled();
       expect(scrollTo).toHaveBeenCalledWith(0, { force: true, immediate: true });
     });
   });

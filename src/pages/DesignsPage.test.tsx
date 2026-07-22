@@ -32,6 +32,13 @@ describe('DesignsPage', () => {
 
     expect(screen.getByRole('dialog')).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'CI/CD Pipeline Architecture — full size' })).toBeInTheDocument();
+    const enlargedImage = screen.getByRole('img', {
+      name: /secure ci\/cd pipeline architecture/i,
+    });
+    expect(enlargedImage).toHaveClass('max-w-none');
+    expect(enlargedImage).toHaveClass('xl:max-w-full');
+    expect(enlargedImage).not.toHaveClass('md:max-w-full');
+    expect(enlargedImage.parentElement).toHaveClass('justify-start');
 
     await user.keyboard('{Escape}');
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();

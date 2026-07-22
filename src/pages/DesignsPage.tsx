@@ -57,11 +57,11 @@ export default function DesignsPage() {
                   Enlarged view of the secure, automated, progressive, and observable pipeline design.
                 </DialogDescription>
               </DialogHeader>
-              <div className="min-h-0 h-full flex items-center justify-center overflow-auto rounded-md">
+              <div className="min-h-0 h-full flex items-start justify-start xl:items-center xl:justify-center overflow-auto rounded-md">
                 <img
                   src={DESIGN_IMAGE}
                   alt={DESIGN_ALT}
-                  className="block max-w-full max-h-full w-auto h-auto object-contain"
+                  className="block w-[1536px] min-w-[960px] max-w-none h-auto xl:w-auto xl:min-w-0 xl:max-w-full xl:max-h-full xl:object-contain"
                 />
               </div>
             </DialogContent>

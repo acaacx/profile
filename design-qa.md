@@ -11,6 +11,7 @@
 - Mobile menu implementation: `/Users/alaric/antigravity/profile/qa-mobile-menu.png`
 - Mobile Interactive implementation: `/Users/alaric/antigravity/profile/qa-interactive-mobile-v3.png`
 - Mobile Designs implementation: `/Users/alaric/antigravity/profile/qa-designs-mobile-top.png`
+- Mobile full-size viewer implementation: `/Users/alaric/antigravity/profile/qa-design-dialog-mobile.jpg`
 
 ## Viewports and Normalization
 
@@ -34,6 +35,10 @@
 - Mobile navigation from Home to Interactive.
 - Interactive route opening at the route introduction rather than retaining prior page scroll.
 - Designs page mobile reflow with no horizontal overflow (`scrollWidth 384`, viewport content width `384`).
+- Mobile full-size viewer exposes the complete oversized image to two-axis panning (`image width 960`, viewer width `348`, scroll width `960`).
+- Browser Back restores the previous homepage reading position for plain and hash-bearing entries (`1200px` and `2200px` respectively) while a pushed Designs route opens at `0px`.
+- Modified primary clicks and middle clicks remain native browser actions rather than being intercepted by client routing.
+- Reduced-motion preference disables Lenis wheel smoothing and switches route motion to immediate/automatic behavior.
 - Direct loads of `/`, `/interactive`, and `/designs`.
 - Console inspection on desktop and mobile: no warnings or errors.
 
@@ -77,6 +82,26 @@ A separate crop comparison was not needed for the diagram because the source fil
    - Fix: Added a route-specific `0.66` white alpha text token.
    - Post-fix evidence: `qa-interactive-mobile-v3.png` and `qa-designs-mobile-top.png` show clearly legible copy without changing the palette.
 
+5. Browser-history review
+   - Finding: `[P1]` Every non-hash location change reset to the top, including browser Back/Forward navigation.
+   - Fix: Added location-keyed scroll-position storage, manual browser scroll restoration, POP-aware Lenis restoration, and a pre-scroll Lenis resize so restoration uses the destination page's dimensions.
+   - Post-fix evidence: navigating Home (`1200px`) → Designs (`0px`) → Back restored the homepage to `1200px`; repeating from `/#projects` at `2200px` restored the hash-bearing entry to `2200px` rather than forcing the section anchor.
+
+6. Reduced-motion review
+   - Finding: `[P1]` CSS motion preferences did not disable Lenis' JavaScript wheel smoothing.
+   - Fix: Lenis now rebuilds when the media query changes, with smoothing disabled and immediate interpolation under reduced motion.
+   - Post-fix evidence: option-policy unit coverage verifies both reduced and standard motion configurations.
+
+7. Modified-click review
+   - Finding: `[P2]` Navigation prevented every click, so Cmd/Ctrl/Shift/Alt-click and middle-click could not use native browser behavior.
+   - Fix: Client routing now handles only unmodified primary clicks.
+   - Post-fix evidence: navigation-policy unit coverage verifies modified and non-primary clicks are not intercepted.
+
+8. Mobile full-size viewer review
+   - Finding: `[P1]` The enlarged image initially fit back down to the mobile viewport; the first intrinsic-width revision then centered overflow and made part of the left edge unreachable.
+   - Fix: The image keeps a `960px` minimum width and aligns to the scroll origin through tablet and small-desktop widths; at `xl`, the wider dialog switches to centered contain behavior.
+   - Post-fix evidence: `qa-design-dialog-mobile.jpg`; measured image/scroll width `960px` within a `348px` viewport, confirming end-to-end panning.
+
 ## Findings
 
 No actionable P0, P1, or P2 differences remain.
@@ -91,8 +116,9 @@ No actionable P0, P1, or P2 differences remain.
 - [x] Mobile navigation with labelled control, Escape close, and 44px target
 - [x] Interactive showcase moved off Home
 - [x] Designs gallery uses supplied asset without alteration
-- [x] Full-size design viewer is readable and keyboard-dismissible
-- [x] Route and hash scrolling work with Lenis
+- [x] Full-size design viewer is readable, pannable on mobile, and keyboard-dismissible
+- [x] Route, hash, and browser-history scrolling work with Lenis
+- [x] Reduced-motion and modified-click behavior covered
 - [x] Desktop and mobile layouts inspected
 - [x] Browser console checked
 
