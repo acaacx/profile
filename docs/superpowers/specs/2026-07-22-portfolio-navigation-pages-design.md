@@ -1,7 +1,7 @@
 # Portfolio Navigation and Page Split Design
 
 Date: 2026-07-22
-Status: Approved design awaiting written-spec review
+Status: Revised design awaiting written-spec review
 
 ## Goal
 
@@ -42,14 +42,18 @@ The page receives a compact route-level introduction above the showcase so visit
 
 ### Designs (`/designs`)
 
-This route is a polished placeholder for the future design archive. It contains:
+This route begins the design archive with one real entry and leaves room for future additions. It contains:
 
 - A clear page title: `Designs`
-- A short statement that the archive is being assembled
-- A concise description of the work that will eventually live there
+- A concise introduction to the archive
+- One gallery entry titled `CI/CD Pipeline Architecture`
+- The supplied `BasicCICD.png` diagram shown in full without cropping or visual alteration
+- A short description: `A secure, automated delivery reference spanning commit, test, package, GitOps deployment, progressive delivery, and post-deploy observability.`
 - A link back to Projects on the homepage
 
-It does not invent design thumbnails, fake portfolio entries, or placeholder artwork.
+The diagram sits in a wide card that preserves its original aspect ratio. Selecting the image opens a larger view so the labels remain readable. The full-size view has an accessible name, can be closed by keyboard, and returns focus to the gallery entry when dismissed.
+
+The source asset is copied into the site's public design-image directory with a descriptive filename. The page does not invent additional design thumbnails, fake portfolio entries, or placeholder artwork.
 
 ## Navigation Behavior
 
@@ -124,7 +128,8 @@ Implementation is complete only after:
 - Browser back and forward behavior is verified
 - Hash navigation from an interior route lands below the fixed header
 - The interactive showcase no longer appears on the homepage and remains fully functional on `/interactive`
-- The Designs page contains no fabricated portfolio items or fake imagery
+- The Designs page renders the supplied CI/CD diagram without cropping, distortion, or fabricated companion items
+- The enlarged design view opens, closes, and returns focus correctly by mouse and keyboard
 - Desktop and mobile screenshots are visually compared against the existing design language
 
 ## Audit Notes Informing the Design
@@ -136,7 +141,7 @@ A screenshot cannot confirm keyboard access, semantic structure, exact contrast 
 ## Out of Scope
 
 - Redesigning homepage content or project cards
-- Creating finished design portfolio entries
+- Creating additional design portfolio entries beyond the supplied CI/CD diagram
 - Changing the existing interactive showcase calculations or copy
 - Replacing the background renderer or global visual system
 - Publishing or deploying the site
