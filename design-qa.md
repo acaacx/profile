@@ -12,6 +12,10 @@
 - Mobile Interactive implementation: `/Users/alaric/antigravity/profile/qa-interactive-mobile-v3.png`
 - Mobile Designs implementation: `/Users/alaric/antigravity/profile/qa-designs-mobile-top.png`
 - Mobile full-size viewer implementation: `/Users/alaric/antigravity/profile/qa-design-dialog-mobile.jpg`
+- Experience source visual truth: `/var/folders/cy/dfhp1qd54152z2pt8xwxf9t80000gn/T/TemporaryItems/NSIRD_screencaptureui_glMB6B/Screenshot 2026-07-22 at 8.08.30 PM.png`
+- Desktop collapsed experience cards: `/Users/alaric/antigravity/profile/qa-experience-cards-desktop.jpg`
+- Desktop expanded experience card: `/Users/alaric/antigravity/profile/qa-experience-card-open-desktop.jpg`
+- Mobile expanded experience card: `/Users/alaric/antigravity/profile/qa-experience-card-open-mobile.jpg`
 
 ## Viewports and Normalization
 
@@ -39,6 +43,10 @@
 - Browser Back restores the previous homepage reading position for plain and hash-bearing entries (`1200px` and `2200px` respectively) while a pushed Designs route opens at `0px`.
 - Modified primary clicks and middle clicks remain native browser actions rather than being intercepted by client routing.
 - Reduced-motion preference disables Lenis wheel smoothing and switches route motion to immediate/automatic behavior.
+- All four experience roles start collapsed and expose `aria-expanded="false"`.
+- Activating a role reveals its responsibilities and tags; opening another role closes the previous one; activating the open role collapses it.
+- Experience summaries use native button semantics and support Enter/Space activation. Accordion reveal animation is disabled under reduced motion.
+- Mobile experience cards fit a `384px` content viewport without horizontal overflow (`scrollWidth 384`) and keep a `124px` summary trigger.
 - Direct loads of `/`, `/interactive`, and `/designs`.
 - Console inspection on desktop and mobile: no warnings or errors.
 
@@ -47,6 +55,8 @@
 The supplied header screenshot and rendered homepage header were inspected together. The implementation preserves the source's black surface, fine bottom border, serif identity, muted navigation, and restrained hierarchy. The approved additional destinations require tighter horizontal spacing than the four-link source. The repo's existing terminal-style brand and LinkedIn/locale controls remain intentionally unchanged.
 
 The supplied CI/CD source and the rendered full-size dialog were inspected together. The pipeline stages, typography within the raster, color bands, legends, arrows, and post-deploy row are visually identical. The dialog adds only the requested surrounding viewer chrome.
+
+The supplied Work Experience screenshot and the collapsed desktop capture were inspected together. The implementation retains the source's dark glass cards, fine borders, large role labels, muted company/date/location hierarchy, generous collapsed height, chevron affordance, and vertical rhythm. The apparent width difference is consistent with viewport and screenshot-density normalization; the implementation intentionally keeps the repo's established `800px` experience container.
 
 ## Focused Comparison
 
@@ -102,6 +112,11 @@ A separate crop comparison was not needed for the diagram because the source fil
    - Fix: The image keeps a `960px` minimum width and aligns to the scroll origin through tablet and small-desktop widths; at `xl`, the wider dialog switches to centered contain behavior.
    - Post-fix evidence: `qa-design-dialog-mobile.jpg`; measured image/scroll width `960px` within a `348px` viewport, confirming end-to-end panning.
 
+9. Experience-card entrance review
+   - Finding: `[P1]` The initial Radix conversion left cards at `opacity: 0` in the development preview because React Strict Mode replayed the GSAP `from` animation after its first cleanup had left inline start styles behind.
+   - Fix: Replaced the implicit-destination `from` animation with an explicit `fromTo` transition ending at `opacity: 1` and `x: 0`. Also removed nested role headings and added reduced-motion handling to the shared accordion content primitive.
+   - Post-fix evidence: `qa-experience-cards-desktop.jpg`; measured first-card opacity `1`, transform `matrix(1, 0, 0, 1, 0, 0)`, four collapsed ARIA states, and no console warnings or errors.
+
 ## Findings
 
 No actionable P0, P1, or P2 differences remain.
@@ -119,6 +134,8 @@ No actionable P0, P1, or P2 differences remain.
 - [x] Full-size design viewer is readable, pannable on mobile, and keyboard-dismissible
 - [x] Route, hash, and browser-history scrolling work with Lenis
 - [x] Reduced-motion and modified-click behavior covered
+- [x] Experience roles collapsed by default with single-open, repeat-to-close behavior
+- [x] Experience cards expose native button, ARIA, focus, and reduced-motion behavior
 - [x] Desktop and mobile layouts inspected
 - [x] Browser console checked
 
