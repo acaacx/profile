@@ -114,6 +114,7 @@ export default function Navigation() {
       <div className="w-full max-w-[1200px] mx-auto px-6 flex items-center justify-between gap-6">
         <a
           href="/"
+          aria-label="Alaric Acaac — DevSecOps/SRE"
           className="font-display text-[20px] text-[#E8E8EC] tracking-normal rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a89f91]"
           onClick={(event) => {
             if (!isUnmodifiedPrimaryClick(event)) return;
@@ -141,7 +142,7 @@ export default function Navigation() {
           {renderLinks()}
         </div>
 
-        <div className="hidden lg:flex items-center gap-3">
+        <div className="hidden lg:flex items-center">
           <a
             href="https://www.linkedin.com/in/acaacx/"
             target="_blank"
@@ -150,15 +151,6 @@ export default function Navigation() {
           >
             LinkedIn
           </a>
-          <span
-            className="px-3 py-1 text-[12px] rounded-full"
-            style={{
-              background: 'rgba(255,255,255,0.06)',
-              color: 'rgba(255,255,255,0.62)',
-            }}
-          >
-            EN
-          </span>
         </div>
 
         <button

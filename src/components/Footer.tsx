@@ -1,5 +1,3 @@
-import { Link } from 'react-router';
-
 export default function Footer() {
   return (
     <footer
@@ -8,25 +6,14 @@ export default function Footer() {
     >
       <div className="max-w-[1000px] mx-auto px-6 py-12">
         {/* Row 1 */}
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-8">
+        <div className="mb-8">
           <div>
             <p className="font-display text-[16px] text-[#E8E8EC]">
               Alaric Acaac
             </p>
-            <p className="text-[12px] text-secondary mt-1">
+            <p className="text-[12px] mt-1" style={{ color: 'rgba(255,255,255,0.48)' }}>
               DevSecOps/SRE
             </p>
-          </div>
-          <div className="flex items-center gap-6">
-            {['About', 'Experience', 'Projects', 'Contact'].map((link) => (
-              <Link
-                key={link}
-                to={`/#${link.toLowerCase()}`}
-                className="nav-link text-[14px]"
-              >
-                {link}
-              </Link>
-            ))}
           </div>
         </div>
 
@@ -35,9 +22,10 @@ export default function Footer() {
           <div className="flex items-center gap-4">
             <a
               href="https://www.linkedin.com/in/acaacx/"
+              aria-label="LinkedIn"
               target="_blank"
               rel="noopener noreferrer"
-              className="transition-opacity duration-300 hover:opacity-100"
+              className="rounded-sm transition-opacity duration-300 hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a89f91]"
               style={{ opacity: 0.5 }}
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" className="text-[#E8E8EC]">
@@ -46,9 +34,10 @@ export default function Footer() {
             </a>
             <a
               href="https://github.com/acaacx"
+              aria-label="GitHub"
               target="_blank"
               rel="noopener noreferrer"
-              className="transition-opacity duration-300 hover:opacity-100"
+              className="rounded-sm transition-opacity duration-300 hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a89f91]"
               style={{ opacity: 0.5 }}
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" className="text-[#E8E8EC]">

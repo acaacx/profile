@@ -24,6 +24,10 @@ describe('Navigation', () => {
     expect(screen.getByRole('navigation', { name: 'Primary navigation' })).not.toHaveClass(
       'opacity-0',
     );
+    expect(
+      screen.getByRole('link', { name: 'Alaric Acaac — DevSecOps/SRE' }),
+    ).toHaveTextContent('alaric@platform:~$');
+    expect(screen.queryByText('EN')).not.toBeInTheDocument();
 
     const desktopLabels = screen
       .getByTestId('desktop-navigation')

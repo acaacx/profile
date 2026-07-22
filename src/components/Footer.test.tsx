@@ -4,14 +4,24 @@ import { describe, expect, it } from 'vitest';
 import Footer from './Footer';
 
 describe('Footer', () => {
-  it('links homepage sections safely from interior routes', () => {
+  it('keeps identity and social links without duplicating primary navigation', () => {
     render(
       <MemoryRouter initialEntries={['/designs']}>
         <Footer />
       </MemoryRouter>,
     );
 
-    expect(screen.getByRole('link', { name: 'Projects' })).toHaveAttribute('href', '/#projects');
-    expect(screen.getByRole('link', { name: 'Contact' })).toHaveAttribute('href', '/#contact');
+    expect(screen.getByText('Alaric Acaac')).toBeInTheDocument();
+    expect(screen.getByText('DevSecOps/SRE')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'LinkedIn' })).toHaveAttribute(
+      'href',
+      'https://www.linkedin.com/in/acaacx/',
+    );
+    expect(screen.getByRole('link', { name: 'GitHub' })).toHaveAttribute(
+      'href',
+      'https://github.com/acaacx',
+    );
+    expect(screen.queryByRole('link', { name: 'Projects' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'Contact' })).not.toBeInTheDocument();
   });
 });
