@@ -14,6 +14,7 @@
 
 - Create `src/sections/ExperienceSection.test.tsx`: interaction regression coverage for initial state, single-open behavior, collapse, and keyboard activation.
 - Modify `src/sections/ExperienceSection.tsx`: render the experience list as a controlled Radix accordion while preserving role content and GSAP entrance behavior.
+- Modify `src/components/ui/accordion.tsx`: disable accordion content animation when the visitor requests reduced motion.
 - Modify `design-qa.md`: record responsive visual and interaction evidence for the new experience cards.
 - Create `qa-experience-cards-desktop.jpg`, `qa-experience-card-open-desktop.jpg`, and `qa-experience-card-open-mobile.jpg`: final browser evidence.
 
@@ -37,7 +38,7 @@ vi.mock('gsap', () => ({
   default: {
     registerPlugin: vi.fn(),
     timeline: vi.fn(() => ({
-      from: vi.fn().mockReturnThis(),
+      fromTo: vi.fn().mockReturnThis(),
       kill: vi.fn(),
     })),
   },
@@ -51,6 +52,7 @@ describe('ExperienceSection', () => {
 
     const roleButtons = screen.getAllByRole('button');
     expect(roleButtons).toHaveLength(4);
+    expect(screen.getAllByRole('heading', { level: 3 })).toHaveLength(4);
     roleButtons.forEach((button) => expect(button).toHaveAttribute('aria-expanded', 'false'));
     expect(screen.queryByText(/Operated and supported 100\+ Kubernetes clusters/i)).not.toBeInTheDocument();
   });
@@ -64,7 +66,13 @@ describe('ExperienceSection', () => {
 
     await user.click(sre);
     expect(sre).toHaveAttribute('aria-expanded', 'true');
-    expect(screen.getByText(/Operated and supported 100\+ Kubernetes clusters/i)).toBeVisible();
+    const sreResponsibility = screen.getByText(
+      /Operated and supported 100\+ Kubernetes clusters/i,
+    );
+    expect(sreResponsibility).toBeVisible();
+    expect(sreResponsibility.closest('[data-slot="accordion-content"]')).toHaveClass(
+      'motion-reduce:animate-none',
+    );
 
     await user.click(devsecops);
     expect(sre).toHaveAttribute('aria-expanded', 'false');
@@ -104,6 +112,7 @@ Expected: FAIL because the existing component initializes `expandedIndex` to `0`
 
 **Files:**
 - Modify: `src/sections/ExperienceSection.tsx`
+- Modify: `src/components/ui/accordion.tsx`
 - Test: `src/sections/ExperienceSection.test.tsx`
 
 - [ ] **Step 1: Replace the imports and card implementation**
@@ -187,6 +196,8 @@ Replace `expandedIndex` with:
 const [expandedRole, setExpandedRole] = useState('');
 ```
 
+Add `motion-reduce:animate-none` to the primitive content classes in `src/components/ui/accordion.tsx` so reduced-motion visitors receive an immediate reveal.
+
 Replace the experience list with:
 
 ```tsx
@@ -226,7 +237,7 @@ Expected: exit code `0` with no errors.
 - [ ] **Step 5: Commit the tested accordion**
 
 ```bash
-git add src/sections/ExperienceSection.tsx src/sections/ExperienceSection.test.tsx
+git add src/components/ui/accordion.tsx src/sections/ExperienceSection.tsx src/sections/ExperienceSection.test.tsx
 git commit -m "feat: make experience roles clickable cards"
 ```
 

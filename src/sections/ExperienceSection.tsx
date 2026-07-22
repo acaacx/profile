@@ -1,8 +1,13 @@
-import { useRef, useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import SectionLabel from '../components/SectionLabel';
-import GlassCard from '../components/GlassCard';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '../components/ui/accordion';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -81,79 +86,63 @@ const EXPERIENCE: ExperienceItem[] = [
   },
 ];
 
-function ExperienceCard({ item, isExpanded, onToggle }: {
-  item: ExperienceItem;
-  isExpanded: boolean;
-  onToggle: () => void;
-}) {
+function ExperienceCard({ item, value }: { item: ExperienceItem; value: string }) {
   return (
-    <GlassCard hoverAccent className="relative" style={{ borderLeft: '2px solid rgba(255,255,255,0.06)' }}>
-      <button
-        className="w-full text-left"
-        onClick={onToggle}
-      >
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-3">
-          <div>
-            <h3 className="text-[18px] font-medium text-[#E8E8EC]">{item.title}</h3>
-            <p className="text-[14px]" style={{ color: 'rgba(255,255,255,0.5)' }}>{item.company}</p>
+    <AccordionItem
+      value={value}
+      className="exp-card glass-card accent-border overflow-hidden border border-white/[0.06] data-[state=open]:border-[#a89f91]/30 data-[state=open]:bg-white/[0.045]"
+    >
+      <AccordionTrigger className="min-h-[124px] w-full cursor-pointer px-5 py-5 md:px-7 md:py-6 hover:no-underline focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#a89f91] [&>svg]:mr-1 [&>svg]:size-5 [&>svg]:text-white/35">
+        <div className="flex min-w-0 flex-1 flex-col gap-4 text-left md:flex-row md:items-center md:justify-between">
+          <div className="min-w-0">
+            <span className="block text-[18px] font-medium text-[#E8E8EC] md:text-[20px]">
+              {item.title}
+            </span>
+            <p className="mt-1 text-[14px] text-white/50">{item.company}</p>
           </div>
-          <div className="flex items-center gap-4 text-[12px]" style={{ color: 'rgba(255,255,255,0.35)' }}>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 pr-2 text-[12px] text-white/40 md:justify-end">
             <span>{item.period}</span>
             <span>{item.location}</span>
           </div>
         </div>
+      </AccordionTrigger>
 
-        <div
-          className="overflow-hidden transition-all duration-500"
-          style={{ maxHeight: isExpanded ? '600px' : '0', opacity: isExpanded ? 1 : 0 }}
-        >
-          <ul className="space-y-2 mt-4 mb-4">
-            {item.bullets.map((bullet, i) => (
-              <li key={i} className="text-[14px] leading-[1.6] flex items-start gap-2" style={{ color: 'rgba(255,255,255,0.45)' }}>
-                <span className="mt-1.5 w-1 h-1 rounded-full flex-shrink-0" style={{ background: '#7c6f64' }} />
-                {bullet}
+      <AccordionContent className="px-5 pb-6 md:px-7 md:pb-7">
+        <div className="border-t border-white/[0.06] pt-5">
+          <ul className="space-y-2.5">
+            {item.bullets.map((bullet) => (
+              <li
+                key={bullet}
+                className="flex items-start gap-3 text-[14px] leading-[1.65] text-white/55"
+              >
+                <span
+                  aria-hidden="true"
+                  className="mt-2 h-1 w-1 flex-shrink-0 rounded-full bg-[#7c6f64]"
+                />
+                <span>{bullet}</span>
               </li>
             ))}
           </ul>
 
-          <div className="flex flex-wrap gap-2">
+          <div className="mt-5 flex flex-wrap gap-2">
             {item.tags.map((tag) => (
               <span
                 key={tag}
-                className="px-3 py-1 text-[12px] rounded-full"
-                style={{ background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.4)' }}
+                className="rounded-full bg-white/[0.05] px-3 py-1 text-[12px] text-white/45"
               >
                 {tag}
               </span>
             ))}
           </div>
         </div>
-
-        <div className="flex items-center justify-center mt-2 pt-2" style={{ borderTop: isExpanded ? '1px solid rgba(255,255,255,0.04)' : 'none' }}>
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            className="transition-transform duration-300"
-            style={{
-              color: 'rgba(255,255,255,0.3)',
-              transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
-            }}
-          >
-            <path d="M6 9l6 6 6-6" />
-          </svg>
-        </div>
-      </button>
-    </GlassCard>
+      </AccordionContent>
+    </AccordionItem>
   );
 }
 
 export default function ExperienceSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const [expandedIndex, setExpandedIndex] = useState(0);
+  const [expandedRole, setExpandedRole] = useState('');
 
   useEffect(() => {
     const el = sectionRef.current;
@@ -169,13 +158,17 @@ export default function ExperienceSection() {
       },
     });
 
-    tl.from(cards, {
-      x: -20,
-      opacity: 0,
-      duration: 0.6,
-      stagger: 0.15,
-      ease: 'power2.out',
-    });
+    tl.fromTo(
+      cards,
+      { x: -20, opacity: 0 },
+      {
+        x: 0,
+        opacity: 1,
+        duration: 0.6,
+        stagger: 0.15,
+        ease: 'power2.out',
+      },
+    );
 
     return () => {
       tl.kill();
@@ -194,17 +187,21 @@ export default function ExperienceSection() {
           Work Experience
         </h2>
 
-        <div className="space-y-6">
+        <Accordion
+          type="single"
+          collapsible
+          value={expandedRole}
+          onValueChange={setExpandedRole}
+          className="space-y-6"
+        >
           {EXPERIENCE.map((item, index) => (
-            <div key={index} className="exp-card">
-              <ExperienceCard
-                item={item}
-                isExpanded={expandedIndex === index}
-                onToggle={() => setExpandedIndex(expandedIndex === index ? -1 : index)}
-              />
-            </div>
+            <ExperienceCard
+              key={`${item.company}-${item.title}`}
+              item={item}
+              value={`role-${index}`}
+            />
           ))}
-        </div>
+        </Accordion>
       </div>
     </section>
   );
