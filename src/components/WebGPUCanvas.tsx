@@ -238,13 +238,13 @@ export default function WebGPUCanvas() {
       // Create ping-pong textures
       const textureUsage = GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.STORAGE_BINDING | GPUTextureUsage.COPY_DST;
 
-      let cellStateA = device.createTexture({
+      const cellStateA = device.createTexture({
         size: [GRID_SIZE, GRID_SIZE],
         format: 'rgba8unorm',
         usage: textureUsage,
       });
 
-      let cellStateB = device.createTexture({
+      const cellStateB = device.createTexture({
         size: [GRID_SIZE, GRID_SIZE],
         format: 'rgba8unorm',
         usage: textureUsage,
@@ -318,7 +318,7 @@ export default function WebGPUCanvas() {
         }),
       ];
 
-      let bindGroups = createBindGroups(cellStateA, cellStateB);
+      const bindGroups = createBindGroups(cellStateA, cellStateB);
       let step = 0;
 
       // Create pipelines

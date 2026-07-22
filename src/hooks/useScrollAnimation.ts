@@ -20,22 +20,21 @@ export function useScrollAnimation<T extends HTMLElement>(
   options: ScrollAnimationOptions = {}
 ) {
   const ref = useRef<T>(null);
+  const {
+    y = 40,
+    x = 0,
+    scale,
+    opacity = 0,
+    duration = 0.7,
+    stagger = 0.1,
+    ease = 'power2.out',
+    start = 'top 80%',
+    delay = 0,
+  } = options;
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-
-    const {
-      y = 40,
-      x = 0,
-      scale,
-      opacity = 0,
-      duration = 0.7,
-      stagger = 0.1,
-      ease = 'power2.out',
-      start = 'top 80%',
-      delay = 0,
-    } = options;
 
     const fromVars: gsap.TweenVars = { opacity };
     if (y !== 0) fromVars.y = y;
@@ -64,7 +63,7 @@ export function useScrollAnimation<T extends HTMLElement>(
         .filter((st) => st.vars.trigger === el)
         .forEach((st) => st.kill());
     };
-  }, []);
+  }, [delay, duration, ease, opacity, scale, stagger, start, x, y]);
 
   return ref;
 }

@@ -37,7 +37,7 @@ function CostCalculator() {
       roi,
       paybackWeeks,
     };
-  }, [clusters, computeBill, teamSize, hourlyRate, wastePercent]);
+  }, [computeBill, teamSize, hourlyRate]);
 
   const formatCurrency = (val: number) => {
     const sym = currency === 'USD' ? '$' : currency === 'EUR' ? '\u20AC' : '\u00A5';
