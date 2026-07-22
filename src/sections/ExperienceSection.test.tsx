@@ -43,7 +43,7 @@ describe('ExperienceSection', () => {
     );
     expect(sreResponsibility).toBeVisible();
     expect(sreResponsibility.closest('[data-slot="accordion-content"]')).toHaveClass(
-      'motion-reduce:animate-none',
+      'motion-reduce:!animate-none',
     );
 
     await user.click(devsecops);
@@ -72,5 +72,23 @@ describe('ExperienceSection', () => {
     await user.keyboard('{Enter}');
 
     expect(firstRole).toHaveAttribute('aria-expanded', 'true');
+  });
+
+  it('retains role order and supports Space activation', async () => {
+    const user = userEvent.setup();
+    render(<ExperienceSection />);
+
+    const roleButtons = screen.getAllByRole('button');
+    expect(roleButtons.map((button) => button.textContent)).toEqual([
+      'Site Reliability EngineerHydrolixJun 2024 – May 2026Remote',
+      'DevSecOps EngineerOmiliaOct 2022 – Mar 2024Remote / EMEA',
+      'Senior DevOps EngineerAsurionOct 2017 – Oct 2022Manila',
+      'Network Operations EngineerAsurionJun 2014 – Oct 2017Manila',
+    ]);
+
+    roleButtons[1].focus();
+    await user.keyboard(' ');
+
+    expect(roleButtons[1]).toHaveAttribute('aria-expanded', 'true');
   });
 });

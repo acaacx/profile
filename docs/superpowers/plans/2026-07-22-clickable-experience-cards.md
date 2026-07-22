@@ -71,7 +71,7 @@ describe('ExperienceSection', () => {
     );
     expect(sreResponsibility).toBeVisible();
     expect(sreResponsibility.closest('[data-slot="accordion-content"]')).toHaveClass(
-      'motion-reduce:animate-none',
+      'motion-reduce:!animate-none',
     );
 
     await user.click(devsecops);
@@ -196,7 +196,7 @@ Replace `expandedIndex` with:
 const [expandedRole, setExpandedRole] = useState('');
 ```
 
-Add `motion-reduce:animate-none` to the primitive content classes in `src/components/ui/accordion.tsx` so reduced-motion visitors receive an immediate reveal.
+Add `motion-reduce:!animate-none` to the primitive content classes in `src/components/ui/accordion.tsx` so reduced-motion visitors receive an immediate reveal with enough specificity to override state animation classes.
 
 Replace the experience list with:
 
