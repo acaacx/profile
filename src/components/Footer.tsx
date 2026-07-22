@@ -1,3 +1,5 @@
+import { Link } from 'react-router';
+
 export default function Footer() {
   return (
     <footer
@@ -17,24 +19,13 @@ export default function Footer() {
           </div>
           <div className="flex items-center gap-6">
             {['About', 'Experience', 'Projects', 'Contact'].map((link) => (
-              <a
+              <Link
                 key={link}
-                href={`#${link.toLowerCase()}`}
-                className="text-[14px] transition-colors duration-300"
-                style={{ color: 'rgba(255,255,255,0.45)' }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  document.querySelector(`#${link.toLowerCase()}`)?.scrollIntoView({ behavior: 'smooth' });
-                }}
-                onMouseEnter={(e) => {
-                  (e.target as HTMLElement).style.color = '#E8E8EC';
-                }}
-                onMouseLeave={(e) => {
-                  (e.target as HTMLElement).style.color = 'rgba(255,255,255,0.45)';
-                }}
+                to={`/#${link.toLowerCase()}`}
+                className="nav-link text-[14px]"
               >
                 {link}
-              </a>
+              </Link>
             ))}
           </div>
         </div>
