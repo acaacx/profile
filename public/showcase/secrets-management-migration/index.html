@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Secrets Management Migration Showcase</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com/">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+  <link href="./fonts.css" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="glow-orb orb-1"></div>
+  <div class="glow-orb orb-2"></div>
+
+  <div class="app-container">
+    <header class="app-header">
+      <div class="header-left">
+        <span class="badge badge-primary">Interactive Showcase</span>
+        <h1>Secrets Management <span class="text-gradient">Migration</span></h1>
+        <p class="subtitle">From plaintext secrets in config files to Azure Key Vault references, backstopped by a non-bypassable Gitleaks scan</p>
+      </div>
+      <div class="header-right">
+        <div class="pipeline-status failed" id="pipeline-status">
+          <span class="status-indicator-dot"></span>
+          <span class="status-text">SECRETS IN SOURCE: 2</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="dashboard-grid">
+
+      <section class="left-section card glass">
+        <div class="control-panel">
+          <div class="control-group">
+            <label for="scenario-select">Repo State</label>
+            <select id="scenario-select">
+              <option value="before" selected>Before: Plaintext Secrets</option>
+              <option value="after">After: Key Vault + Gitleaks</option>
+            </select>
+          </div>
+
+          <div class="control-group">
+            <label for="speed-select">Speed</label>
+            <select id="speed-select">
+              <option value="1">1.0x (Normal)</option>
+              <option value="2" selected>2.0x (Fast)</option>
+              <option value="4">4.0x (Hyper)</option>
+            </select>
+          </div>
+
+          <div class="action-buttons">
+            <button id="btn-trigger" class="btn btn-primary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              Attempt Commit
+            </button>
+            <button id="btn-reset" class="btn btn-secondary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
+              Reset
+            </button>
+          </div>
+        </div>
+
+        <div class="file-viewer">
+          <div class="file-viewer-header">
+            <span>config.yaml</span>
+            <span id="file-mode-label">plaintext secrets</span>
+          </div>
+          <div class="file-viewer-body" id="file-body">
+            <div class="code-line"><span class="code-key">database</span>:</div>
+            <div class="code-line">  <span class="code-key">host</span>: db.internal.example.com</div>
+            <div class="code-line line-secret-plain">  <span class="code-key">password</span>: "Sup3rS3cr3t!2024"</div>
+            <div class="code-line"><span class="code-key">api</span>:</div>
+            <div class="code-line line-secret-plain">  <span class="code-key">stripe_key</span>: "stripe-key-REDACTED-FOR-DEMO-000000"</div>
+          </div>
+          <div class="file-viewer-footer" id="file-footer">committed directly to source control &middot; no scanning in place</div>
+        </div>
+      </section>
+
+      <section class="right-section flex-col gap-6">
+
+        <div class="card glass status-details-card">
+          <div class="card-header">
+            <h3>Secret Exposure</h3>
+            <span class="pulse-ring running-only"></span>
+          </div>
+          <div class="eval-stats-container">
+            <div class="stat-box">
+              <span class="stat-label">Secrets in Source</span>
+              <span class="stat-value" id="current-scenario-index">2</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-label">Gitleaks Findings</span>
+              <span class="stat-value" id="current-trajectory-score">N/A</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-label">Scan Gate</span>
+              <span class="stat-value" id="current-rouge-score">None</span>
+            </div>
+          </div>
+          <div class="progress-bar-container">
+            <div class="progress-info">
+              <span>Migration Progress</span>
+              <span id="progress-text">0 / 2 Secrets Migrated</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" id="pipeline-progress-fill" style="width: 0%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card terminal-card flex-grow flex-col">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span class="dot dot-red"></span>
+              <span class="dot dot-yellow"></span>
+              <span class="dot dot-green"></span>
+            </div>
+            <div class="terminal-title">bash - git-commit-runner</div>
+            <div class="terminal-actions">
+              <button id="btn-clear-console" title="Clear Console">🧹</button>
+            </div>
+          </div>
+          <div class="terminal-body" id="terminal-output">
+            <div class="terminal-line system-msg"># Secrets migration simulation ready.</div>
+            <div class="terminal-line system-msg"># Select repo state above and click "Attempt Commit".</div>
+            <div class="terminal-line cursor-line"><span class="prompt">$</span><span class="cursor">_</span></div>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+  </div>
+
+  <script src="./app.js"></script>
+</body></html>

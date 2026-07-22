@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Policy-as-Code Gate Showcase</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com/">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+  <link href="./fonts.css" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="glow-orb orb-1"></div>
+  <div class="glow-orb orb-2"></div>
+
+  <div class="app-container">
+    <header class="app-header">
+      <div class="header-left">
+        <span class="badge badge-primary">Interactive Showcase</span>
+        <h1>Policy-as-Code Gate <span class="text-gradient">with Exception Path</span></h1>
+        <p class="subtitle">OPA/Gatekeeper + Conftest gate: critical CVEs hard-block, medium CVEs get a time-boxed risk-acceptance ticket instead of an all-or-nothing wall</p>
+      </div>
+      <div class="header-right">
+        <div class="pipeline-status passed" id="pipeline-status">
+          <span class="status-indicator-dot"></span>
+          <span class="status-text">PIPELINE: PASSED</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="dashboard-grid">
+
+      <section class="left-section card glass">
+        <div class="control-panel">
+          <div class="control-group">
+            <label for="scenario-select">Execution Path</label>
+            <select id="scenario-select">
+              <option value="pass" selected>Force PASS (Clean Artifact)</option>
+              <option value="fail">Force BLOCK (Critical CVE)</option>
+              <option value="exception">Force EXCEPTION (Medium CVE)</option>
+              <option value="dynamic">Live Dynamic (CVSS Slider)</option>
+            </select>
+          </div>
+
+          <div class="control-group" id="cvss-group" style="opacity: 0.5; pointer-events: none;">
+            <div class="label-with-val">
+              <label for="cvss-slider">Simulated Max CVSS Score</label>
+              <span id="cvss-val" class="slider-val">2.5</span>
+            </div>
+            <input type="range" id="cvss-slider" min="0" max="10" value="2.5" step="0.5">
+          </div>
+
+          <div class="control-group">
+            <label for="speed-select">Speed</label>
+            <select id="speed-select">
+              <option value="1">1.0x (Normal)</option>
+              <option value="2" selected>2.0x (Fast)</option>
+              <option value="4">4.0x (Hyper)</option>
+            </select>
+          </div>
+
+          <div class="action-buttons">
+            <button id="btn-trigger" class="btn btn-primary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              Run Pipeline
+            </button>
+            <button id="btn-reset" class="btn btn-secondary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
+              Reset
+            </button>
+          </div>
+        </div>
+
+        <div class="sequence-diagram-container">
+          <div class="actor-headers">
+            <div class="actor-col dev-actor highlighted" data-actor="developer">
+              <div class="actor-box">
+                <span class="actor-icon">🧑‍💻</span>
+                <span class="actor-title">Developer</span>
+              </div>
+            </div>
+            <div class="actor-col repo-actor highlighted" data-actor="github">
+              <div class="actor-box">
+                <span class="actor-icon">🐙</span>
+                <span class="actor-title">GitHub</span>
+              </div>
+            </div>
+            <div class="actor-col ci-actor" data-actor="cirunner">
+              <div class="actor-box">
+                <span class="actor-icon">⚙️</span>
+                <span class="actor-title">CI Build</span>
+              </div>
+            </div>
+            <div class="actor-col eval-actor" data-actor="evaluator">
+              <div class="actor-box">
+                <span class="actor-icon">🛡️</span>
+                <span class="actor-title">OPA / Conftest</span>
+              </div>
+            </div>
+            <div class="actor-col prod-actor" data-actor="production">
+              <div class="actor-box">
+                <span class="actor-icon">☁️</span>
+                <span class="actor-title">Registry / Prod</span>
+              </div>
+            </div>
+          </div>
+
+          <svg class="sequence-svg" viewBox="0 0 1000 610" preserveAspectRatio="xMidYMid meet">
+            <line class="lifeline" x1="100" y1="10" x2="100" y2="600"></line>
+            <line class="lifeline" x1="300" y1="10" x2="300" y2="600"></line>
+            <line class="lifeline" x1="500" y1="10" x2="500" y2="600"></line>
+            <line class="lifeline" x1="700" y1="10" x2="700" y2="600"></line>
+            <line class="lifeline" x1="900" y1="10" x2="900" y2="600"></line>
+
+            <defs>
+              <marker id="arrow-gray" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="#8E9AA8"></path>
+              </marker>
+              <marker id="arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="#38BDF8"></path>
+              </marker>
+              <marker id="arrow-red" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="#F43F5E"></path>
+              </marker>
+              <marker id="arrow-yellow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="#FBBF24"></path>
+              </marker>
+              <marker id="arrow-green" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="#10B981"></path>
+              </marker>
+              <filter id="glow-blue" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="3" result="blur"></feGaussianBlur>
+                <feMerge>
+                  <feMergeNode in="blur"></feMergeNode>
+                  <feMergeNode in="SourceGraphic"></feMergeNode>
+                </feMerge>
+              </filter>
+            </defs>
+
+            <g class="msg-group active" id="msg-git-push">
+              <path class="msg-line animate-msg" d="M 100 60 L 300 60" stroke-dasharray="8 4" stroke="#8E9AA8" stroke-width="2" marker-end="url(#arrow-gray)" style="stroke-dasharray: 200; stroke-dashoffset: 200;"></path>
+              <text class="msg-label" x="200" y="50">git push / open PR</text>
+            </g>
+
+            <g class="msg-group" id="msg-trigger-build">
+              <path class="msg-line" d="M 300 110 L 500 110" stroke="#8E9AA8" stroke-width="2" marker-end="url(#arrow-gray)" style="stroke-dasharray: 200; stroke-dashoffset: 200;"></path>
+              <text class="msg-label" x="400" y="100">Trigger CI Build</text>
+            </g>
+
+            <g class="msg-group" id="msg-run-eval">
+              <path class="msg-line" d="M 500 160 L 700 160" stroke="#38BDF8" stroke-width="2.5" marker-end="url(#arrow-blue)" style="stroke-dasharray: 200; stroke-dashoffset: 200;"></path>
+              <text class="msg-label highlight-blue" x="600" y="150">Invoke Conftest Gate</text>
+            </g>
+
+            <g class="gate-box-group" id="gate-box-group">
+              <rect class="gate-rect" x="590" y="195" width="220" height="130" rx="8" fill="rgba(56, 189, 248, 0.03)" stroke="rgba(56, 189, 248, 0.4)" stroke-width="1.5"></rect>
+              <text class="gate-header" x="700" y="215">THE POLICY GATE</text>
+
+              <g class="gate-step passed" id="gate-step-load">
+                <circle cx="615" cy="240" r="5" class="step-bullet"></circle>
+                <text x="630" y="244" class="step-text">Verify Cosign Signature</text>
+              </g>
+
+              <g class="gate-step passed" id="gate-step-run">
+                <circle cx="615" cy="270" r="5" class="step-bullet"></circle>
+                <text x="630" y="274" class="step-text">Verify SBOM (Syft) Present</text>
+              </g>
+
+              <g class="gate-step passed" id="gate-step-compare">
+                <circle cx="615" cy="300" r="5" class="step-bullet"></circle>
+                <text x="630" y="304" class="step-text">Evaluate CVE Severity (OPA)</text>
+              </g>
+            </g>
+
+            <!-- ALT BLOCK: 3-way fork -->
+            <g class="alt-block-group pass-active" id="alt-block-group">
+              <rect class="alt-rect" x="30" y="350" width="940" height="220" rx="6" fill="transparent" stroke="rgba(142, 154, 168, 0.2)" stroke-width="1.5"></rect>
+
+              <polygon points="30,350 90,350 75,372 30,372" fill="rgba(142, 154, 168, 0.15)" stroke="rgba(142, 154, 168, 0.2)" stroke-width="1.5"></polygon>
+              <text class="alt-badge-text" x="42" y="365">ALT</text>
+
+              <line class="alt-divider" x1="30" y1="418" x2="970" y2="418" stroke="rgba(142, 154, 168, 0.2)" stroke-dasharray="4 4" stroke-width="1"></line>
+              <line class="alt-divider" x1="30" y1="486" x2="970" y2="486" stroke="rgba(142, 154, 168, 0.2)" stroke-dasharray="4 4" stroke-width="1"></line>
+
+              <!-- CRITICAL / BLOCK lane -->
+              <g class="scenario-fail-group" id="group-fail-path">
+                <rect x="31" y="372" width="938" height="46" fill="rgba(244, 63, 94, 0.01)"></rect>
+                <text class="scenario-cond-label fail-color" x="50" y="388">[CVSS &#8805; 7.0 CRITICAL]</text>
+
+                <g class="alt-msg" id="msg-failed-exit">
+                  <path class="msg-line line-fail" d="M 700 405 L 500 405" stroke-dasharray="5 3" stroke="#F43F5E" stroke-width="2" marker-end="url(#arrow-red)" style="stroke-dasharray: 200; stroke-dashoffset: 200;"></path>
+                </g>
+                <g class="alt-msg" id="msg-block-deploy">
+                  <path class="msg-line line-fail" d="M 500 410 L 100 410" stroke-dasharray="5 3" stroke="#F43F5E" stroke-width="2" marker-end="url(#arrow-red)" style="stroke-dasharray: 400; stroke-dashoffset: 400;"></path>
+                  <circle cx="300" cy="410" r="8" fill="#F43F5E"></circle>
+                  <text x="300" y="414" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle">X</text>
+                  <text class="msg-label label-fail" x="240" y="398">Deploy Blocked</text>
+                </g>
+              </g>
+
+              <!-- MEDIUM / EXCEPTION lane -->
+              <g class="scenario-exception-group" id="group-exception-path">
+                <rect x="31" y="419" width="938" height="67" fill="rgba(251, 191, 36, 0.01)"></rect>
+                <text class="scenario-cond-label exception-color" x="50" y="437">[4.0 &#8804; CVSS &lt; 7.0 MEDIUM]</text>
+
+                <g class="alt-msg" id="msg-exception-granted">
+                  <path class="msg-line line-exception" d="M 700 452 L 500 452" stroke-dasharray="5 3" stroke="#FBBF24" stroke-width="2" marker-end="url(#arrow-yellow)" style="stroke-dasharray: 200; stroke-dashoffset: 200;"></path>
+                  <text class="msg-label label-exception" x="600" y="444">EXCEPTION GRANTED</text>
+                </g>
+                <g class="alt-msg" id="msg-deploy-exception">
+                  <path class="msg-line line-exception" d="M 500 472 L 900 472" stroke="#FBBF24" stroke-width="2.5" marker-end="url(#arrow-yellow)" style="stroke-dasharray: 400; stroke-dashoffset: 400;"></path>
+                  <circle cx="700" cy="472" r="9" fill="#FBBF24"></circle>
+                  <text x="700" y="476" fill="#05070a" font-size="11" font-weight="bold" text-anchor="middle">!</text>
+                  <text class="msg-label label-exception" x="600" y="464">Deploy + Risk Ticket</text>
+                </g>
+              </g>
+
+              <!-- CLEAN / PASS lane -->
+              <g class="scenario-pass-group" id="group-pass-path">
+                <rect x="31" y="487" width="938" height="82" fill="rgba(16, 185, 129, 0.01)"></rect>
+                <text class="scenario-cond-label pass-color" x="50" y="505">[CVSS &lt; 4.0 CLEAN]</text>
+
+                <g class="alt-msg" id="msg-passed-ok">
+                  <path class="msg-line line-pass" d="M 700 520 L 500 520" stroke-dasharray="5 3" stroke="#10B981" stroke-width="2" marker-end="url(#arrow-green)" style="stroke-dasharray: 200; stroke-dashoffset: 200;"></path>
+                  <text class="msg-label label-pass" x="600" y="512">PASSED</text>
+                </g>
+                <g class="alt-msg" id="msg-deploy-agent">
+                  <path class="msg-line line-pass" d="M 500 550 L 900 550" stroke="#10B981" stroke-width="2.5" marker-end="url(#arrow-green)" style="stroke-dasharray: 400; stroke-dashoffset: 400;"></path>
+                  <circle cx="700" cy="550" r="9" fill="#10B981"></circle>
+                  <path d="M 696 550 L 699 553 L 704 547" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round"></path>
+                  <text class="msg-label label-pass" x="600" y="542">Deploy to Prod</text>
+                </g>
+              </g>
+            </g>
+          </svg>
+        </div>
+      </section>
+
+      <section class="right-section flex-col gap-6">
+
+        <div class="card glass status-details-card">
+          <div class="card-header">
+            <h3>Policy Gate Status</h3>
+            <span class="pulse-ring running-only"></span>
+          </div>
+          <div class="eval-stats-container">
+            <div class="stat-box">
+              <span class="stat-label">Signature / SBOM</span>
+              <span class="stat-value" id="current-scenario-index">OK</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-label">Max CVSS</span>
+              <span class="stat-value" id="current-trajectory-score">2.5</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-label">Risk Ticket</span>
+              <span class="stat-value" id="current-rouge-score">&mdash;</span>
+            </div>
+          </div>
+          <div class="progress-bar-container">
+            <div class="progress-info">
+              <span>Policy Checks</span>
+              <span id="progress-text">3 / 3 Checks</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" id="pipeline-progress-fill" style="width: 100%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card terminal-card flex-grow flex-col">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span class="dot dot-red"></span>
+              <span class="dot dot-yellow"></span>
+              <span class="dot dot-green"></span>
+            </div>
+            <div class="terminal-title">bash - conftest-gate-runner</div>
+            <div class="terminal-actions">
+              <button id="btn-clear-console" title="Clear Console">🧹</button>
+            </div>
+          </div>
+          <div class="terminal-body" id="terminal-output">
+            <div class="terminal-line system-msg"># Policy-as-Code Gate Simulation ready.</div>
+            <div class="terminal-line system-msg"># Select your settings above and click "Run Pipeline" to begin.</div>
+            <div class="terminal-line cursor-line"><span class="prompt">$</span><span class="cursor">_</span></div>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+  </div>
+
+  <script src="./app.js"></script>
+</body></html>

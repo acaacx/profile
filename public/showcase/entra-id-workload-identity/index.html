@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entra ID Workload Identity Showcase</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com/">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+  <link href="./fonts.css" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="glow-orb orb-1"></div>
+  <div class="glow-orb orb-2"></div>
+
+  <div class="app-container">
+    <header class="app-header">
+      <div class="header-left">
+        <span class="badge badge-primary">Interactive Showcase</span>
+        <h1>Entra ID Workload Identity <span class="text-gradient">&amp; Least-Privilege Access</span></h1>
+        <p class="subtitle">Swapping a standing client secret for GitHub Actions OIDC + federated credentials, scoped to a custom RBAC role</p>
+      </div>
+      <div class="header-right">
+        <div class="pipeline-status passed" id="pipeline-status">
+          <span class="status-indicator-dot"></span>
+          <span class="status-text">RISK: NONE (OIDC)</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="dashboard-grid">
+
+      <section class="left-section card glass">
+        <div class="control-panel">
+          <div class="control-group">
+            <label for="scenario-select">Auth Mode</label>
+            <select id="scenario-select">
+              <option value="oidc" selected>OIDC Federated (Current)</option>
+              <option value="legacy">Client Secret (Legacy)</option>
+            </select>
+          </div>
+
+          <div class="control-group" id="rotation-group" style="opacity: 0.5; pointer-events: none;">
+            <div class="label-with-val">
+              <label for="rotation-slider">Days Since Last Rotation</label>
+              <span id="rotation-val" class="slider-val">12</span>
+            </div>
+            <input type="range" id="rotation-slider" min="0" max="120" value="12" step="1">
+          </div>
+
+          <div class="control-group">
+            <label for="speed-select">Speed</label>
+            <select id="speed-select">
+              <option value="1">1.0x (Normal)</option>
+              <option value="2" selected>2.0x (Fast)</option>
+              <option value="4">4.0x (Hyper)</option>
+            </select>
+          </div>
+
+          <div class="action-buttons">
+            <button id="btn-trigger" class="btn btn-primary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              Run Deploy Job
+            </button>
+            <button id="btn-reset" class="btn btn-secondary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
+              Reset
+            </button>
+          </div>
+        </div>
+
+        <div class="sequence-diagram-container">
+          <div class="actor-headers">
+            <div class="actor-col dev-actor highlighted" data-actor="developer">
+              <div class="actor-box">
+                <span class="actor-icon">🧑‍💻</span>
+                <span class="actor-title">Developer</span>
+              </div>
+            </div>
+            <div class="actor-col repo-actor highlighted" data-actor="github">
+              <div class="actor-box">
+                <span class="actor-icon">🐙</span>
+                <span class="actor-title">GitHub Actions</span>
+              </div>
+            </div>
+            <div class="actor-col ci-actor" data-actor="entra">
+              <div class="actor-box">
+                <span class="actor-icon">🪪</span>
+                <span class="actor-title">Entra ID</span>
+              </div>
+            </div>
+            <div class="actor-col eval-actor" data-actor="arm">
+              <div class="actor-box">
+                <span class="actor-icon">🛡️</span>
+                <span class="actor-title">Azure RBAC</span>
+              </div>
+            </div>
+            <div class="actor-col prod-actor" data-actor="aks">
+              <div class="actor-box">
+                <span class="actor-icon">☁️</span>
+                <span class="actor-title">AKS / Key Vault</span>
+              </div>
+            </div>
+          </div>
+
+          <svg class="sequence-svg" viewBox="0 0 1000 560" preserveAspectRatio="xMidYMid meet">
+            <line class="lifeline" x1="100" y1="10" x2="100" y2="550"></line>
+            <line class="lifeline" x1="300" y1="10" x2="300" y2="550"></line>
+            <line class="lifeline" x1="500" y1="10" x2="500" y2="550"></line>
+            <line class="lifeline" x1="700" y1="10" x2="700" y2="550"></line>
+            <line class="lifeline" x1="900" y1="10" x2="900" y2="550"></line>
+
+            <defs>
+              <marker id="arrow-gray" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="#8E9AA8"></path>
+              </marker>
+              <marker id="arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="#38BDF8"></path>
+              </marker>
+              <marker id="arrow-red" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="#F43F5E"></path>
+              </marker>
+              <marker id="arrow-green" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="#10B981"></path>
+              </marker>
+              <filter id="glow-blue" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="3" result="blur"></feGaussianBlur>
+                <feMerge>
+                  <feMergeNode in="blur"></feMergeNode>
+                  <feMergeNode in="SourceGraphic"></feMergeNode>
+                </feMerge>
+              </filter>
+            </defs>
+
+            <g class="msg-group active" id="msg-git-push">
+              <path class="msg-line animate-msg" d="M 100 60 L 300 60" stroke-dasharray="8 4" stroke="#8E9AA8" stroke-width="2" marker-end="url(#arrow-gray)" style="stroke-dasharray: 200; stroke-dashoffset: 200;"></path>
+              <text class="msg-label" x="200" y="50">git push (deploy.yml)</text>
+            </g>
+
+            <g class="msg-group" id="msg-trigger-build">
+              <path class="msg-line" d="M 300 110 L 500 110" stroke="#8E9AA8" stroke-width="2" marker-end="url(#arrow-gray)" style="stroke-dasharray: 200; stroke-dashoffset: 200;"></path>
+              <text class="msg-label" x="400" y="100">Request credential</text>
+            </g>
+
+            <g class="msg-group" id="msg-run-eval">
+              <path class="msg-line" d="M 500 160 L 700 160" stroke="#38BDF8" stroke-width="2.5" marker-end="url(#arrow-blue)" style="stroke-dasharray: 200; stroke-dashoffset: 200;"></path>
+              <text class="msg-label highlight-blue" x="600" y="150">Validate &amp; Authorize</text>
+            </g>
+
+            <g class="gate-box-group" id="gate-box-group">
+              <rect class="gate-rect" x="590" y="195" width="220" height="120" rx="8" fill="rgba(56, 189, 248, 0.03)" stroke="rgba(56, 189, 248, 0.4)" stroke-width="1.5"></rect>
+              <text class="gate-header" x="700" y="215">TOKEN ISSUANCE</text>
+
+              <g class="gate-step passed" id="gate-step-load">
+                <circle cx="615" cy="240" r="5" class="step-bullet"></circle>
+                <text x="630" y="244" class="step-text">Validate Credential</text>
+              </g>
+
+              <g class="gate-step passed" id="gate-step-run">
+                <circle cx="615" cy="270" r="5" class="step-bullet"></circle>
+                <text x="630" y="274" class="step-text">Resolve RBAC Scope</text>
+              </g>
+
+              <g class="gate-step passed" id="gate-step-compare">
+                <circle cx="615" cy="300" r="5" class="step-bullet"></circle>
+                <text x="630" y="304" class="step-text">Issue Access Token</text>
+              </g>
+            </g>
+
+            <!-- ALT BLOCK -->
+            <g class="alt-block-group pass-active" id="alt-block-group">
+              <rect class="alt-rect" x="30" y="340" width="940" height="200" rx="6" fill="transparent" stroke="rgba(142, 154, 168, 0.2)" stroke-width="1.5"></rect>
+
+              <polygon points="30,340 90,340 75,362 30,362" fill="rgba(142, 154, 168, 0.15)" stroke="rgba(142, 154, 168, 0.2)" stroke-width="1.5"></polygon>
+              <text class="alt-badge-text" x="42" y="355">ALT</text>
+
+              <line class="alt-divider" x1="30" y1="440" x2="970" y2="440" stroke="rgba(142, 154, 168, 0.2)" stroke-dasharray="4 4" stroke-width="1"></line>
+
+              <!-- LEGACY (client secret) lane -->
+              <g class="scenario-fail-group" id="group-fail-path">
+                <rect x="31" y="362" width="938" height="77" fill="rgba(244, 63, 94, 0.01)"></rect>
+                <text class="scenario-cond-label fail-color" x="50" y="380">[Client Secret &middot; Standing Credential]</text>
+
+                <g class="alt-msg" id="msg-failed-exit">
+                  <path class="msg-line line-fail" d="M 700 395 L 500 395" stroke-dasharray="5 3" stroke="#F43F5E" stroke-width="2" marker-end="url(#arrow-red)" style="stroke-dasharray: 200; stroke-dashoffset: 200;"></path>
+                  <text class="msg-label label-fail" x="600" y="387">Contributor Token (broad)</text>
+                </g>
+
+                <g class="alt-msg" id="msg-block-deploy">
+                  <path class="msg-line line-fail" d="M 500 420 L 900 420" stroke-dasharray="5 3" stroke="#F43F5E" stroke-width="2" marker-end="url(#arrow-red)" style="stroke-dasharray: 400; stroke-dashoffset: 400;"></path>
+                  <circle cx="700" cy="420" r="8" fill="#F43F5E"></circle>
+                  <text x="700" y="424" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle">!</text>
+                  <text class="msg-label label-fail" x="600" y="412">Rotation Debt Accrues</text>
+                </g>
+              </g>
+
+              <!-- OIDC lane -->
+              <g class="scenario-pass-group" id="group-pass-path">
+                <rect x="31" y="441" width="938" height="98" fill="rgba(16, 185, 129, 0.01)"></rect>
+                <text class="scenario-cond-label pass-color" x="50" y="465">[OIDC Federated &middot; Zero Standing Secret]</text>
+
+                <g class="alt-msg" id="msg-passed-ok">
+                  <path class="msg-line line-pass" d="M 700 480 L 500 480" stroke-dasharray="5 3" stroke="#10B981" stroke-width="2" marker-end="url(#arrow-green)" style="stroke-dasharray: 200; stroke-dashoffset: 200;"></path>
+                  <text class="msg-label label-pass" x="600" y="472">Scoped Token (1hr TTL)</text>
+                </g>
+
+                <g class="alt-msg" id="msg-deploy-agent">
+                  <path class="msg-line line-pass" d="M 500 515 L 900 515" stroke="#10B981" stroke-width="2.5" marker-end="url(#arrow-green)" style="stroke-dasharray: 400; stroke-dashoffset: 400;"></path>
+                  <circle cx="700" cy="515" r="9" fill="#10B981"></circle>
+                  <path d="M 696 515 L 699 518 L 704 512" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round"></path>
+                  <text class="msg-label label-pass" x="600" y="505">Deploy to Resource Group</text>
+                </g>
+              </g>
+            </g>
+          </svg>
+        </div>
+      </section>
+
+      <section class="right-section flex-col gap-6">
+
+        <div class="card glass status-details-card">
+          <div class="card-header">
+            <h3>Credential Status</h3>
+            <span class="pulse-ring running-only"></span>
+          </div>
+          <div class="eval-stats-container">
+            <div class="stat-box">
+              <span class="stat-label">Credential Type</span>
+              <span class="stat-value" id="current-scenario-index">OIDC</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-label">Token TTL</span>
+              <span class="stat-value" id="current-trajectory-score">1hr</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-label">RBAC Scope</span>
+              <span class="stat-value" id="current-rouge-score">RG-only</span>
+            </div>
+          </div>
+          <div class="progress-bar-container">
+            <div class="progress-info">
+              <span>Days Until Rotation Required</span>
+              <span id="progress-text">N/A &mdash; no standing secret</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" id="pipeline-progress-fill" style="width: 0%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card terminal-card flex-grow flex-col">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span class="dot dot-red"></span>
+              <span class="dot dot-yellow"></span>
+              <span class="dot dot-green"></span>
+            </div>
+            <div class="terminal-title">bash - github-actions-runner</div>
+            <div class="terminal-actions">
+              <button id="btn-clear-console" title="Clear Console">🧹</button>
+            </div>
+          </div>
+          <div class="terminal-body" id="terminal-output">
+            <div class="terminal-line system-msg"># Workload Identity Simulation ready.</div>
+            <div class="terminal-line system-msg"># Select auth mode above and click "Run Deploy Job" to begin.</div>
+            <div class="terminal-line cursor-line"><span class="prompt">$</span><span class="cursor">_</span></div>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+  </div>
+
+  <script src="./app.js"></script>
+</body></html>

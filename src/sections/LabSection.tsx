@@ -690,6 +690,48 @@ function EvalGateShowcase() {
   );
 }
 
+// Generic embedded standalone showcase (iframe into public/showcase/<slug>/)
+function StandaloneShowcase({ slug, label, caption }: { slug: string; label: string; caption: string }) {
+  return (
+    <GlassCard className="p-3 md:p-4">
+      <div className="flex items-center gap-2 mb-3 px-1">
+        <div className="flex gap-1.5">
+          <div className="w-3 h-3 rounded-full" style={{ background: '#ff5f57' }} />
+          <div className="w-3 h-3 rounded-full" style={{ background: '#febc2e' }} />
+          <div className="w-3 h-3 rounded-full" style={{ background: '#28c840' }} />
+        </div>
+        <span className="font-mono-label ml-2" style={{ color: 'rgba(255,255,255,0.35)' }}>
+          {label}
+        </span>
+        <a
+          href={`/showcase/${slug}/`}
+          target="_blank"
+          rel="noreferrer"
+          className="ml-auto text-[11px] transition-colors duration-200 hover:text-white"
+          style={{ color: 'rgba(255,255,255,0.35)' }}
+        >
+          open full &#8599;
+        </a>
+      </div>
+      <div
+        className="rounded-xl overflow-hidden"
+        style={{ border: '1px solid rgba(255,255,255,0.06)' }}
+      >
+        <iframe
+          src={`/showcase/${slug}/`}
+          title={label}
+          loading="lazy"
+          className="w-full block"
+          style={{ height: 'min(80vh, 760px)', border: 'none', background: '#0a0a0e' }}
+        />
+      </div>
+      <p className="text-[10px] mt-3 text-center" style={{ color: 'rgba(255,255,255,0.2)' }}>
+        {caption}
+      </p>
+    </GlassCard>
+  );
+}
+
 // Main Lab Section
 export default function LabSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -767,6 +809,41 @@ export default function LabSection() {
             </div>
             <div className="lab-card">
               <EvalGateShowcase />
+            </div>
+            <div className="lab-card">
+              <StandaloneShowcase
+                slug="entra-id-workload-identity"
+                label="entra-id-workload-identity"
+                caption="client secret vs OIDC federated credential &middot; scoped RBAC &middot; zero standing secret"
+              />
+            </div>
+            <div className="lab-card">
+              <StandaloneShowcase
+                slug="policy-as-code-gate"
+                label="policy-as-code-gate"
+                caption="cosign + SBOM + OPA/Conftest &middot; critical blocks, medium gets a time-boxed exception"
+              />
+            </div>
+            <div className="lab-card">
+              <StandaloneShowcase
+                slug="secrets-management-migration"
+                label="secrets-management-migration"
+                caption="plaintext config vs Key Vault refs &middot; Gitleaks pre-commit + non-bypassable CI scan"
+              />
+            </div>
+            <div className="lab-card">
+              <StandaloneShowcase
+                slug="security-tool-consolidation"
+                label="security-tool-consolidation"
+                caption="11 overlapping tools &middot; 3 vendors removed &middot; one severity verdict, not three"
+              />
+            </div>
+            <div className="lab-card">
+              <StandaloneShowcase
+                slug="observability-signal-not-noise"
+                label="observability-signal-not-noise"
+                caption="default alert-on-everything vs 3 curated KQL rules &middot; on-call fatigue meter"
+              />
             </div>
           </div>
         </div>

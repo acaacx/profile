@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Security Tool Consolidation Showcase</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com/">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+  <link href="./fonts.css" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="glow-orb orb-1"></div>
+  <div class="glow-orb orb-2"></div>
+
+  <div class="app-container">
+    <header class="app-header">
+      <div class="header-left">
+        <span class="badge badge-primary">Interactive Showcase</span>
+        <h1>Security Tool <span class="text-gradient">Consolidation</span></h1>
+        <p class="subtitle">Auditing 11 overlapping tools across 3 categories down to one coverage model — same detection surface, one severity verdict</p>
+      </div>
+      <div class="header-right">
+        <div class="pipeline-status failed" id="pipeline-status">
+          <span class="status-indicator-dot"></span>
+          <span class="status-text">STATE: FRAGMENTED</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="dashboard-grid">
+
+      <section class="left-section card glass">
+        <div class="control-panel">
+          <div class="control-group">
+            <label for="scenario-select">Stack State</label>
+            <select id="scenario-select">
+              <option value="before" selected>Before: Fragmented Stack</option>
+              <option value="after">After: Consolidated</option>
+            </select>
+          </div>
+
+          <div class="control-group">
+            <label for="speed-select">Speed</label>
+            <select id="speed-select">
+              <option value="1">1.0x (Normal)</option>
+              <option value="2" selected>2.0x (Fast)</option>
+              <option value="4">4.0x (Hyper)</option>
+            </select>
+          </div>
+
+          <div class="action-buttons">
+            <button id="btn-trigger" class="btn btn-primary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              Run Tool Audit
+            </button>
+            <button id="btn-reset" class="btn btn-secondary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
+              Reset
+            </button>
+          </div>
+        </div>
+
+        <div class="tool-audit-container">
+          <div class="tool-category" data-category="sca">
+            <div class="tool-category-header">
+              <span class="tool-category-title">SCA / Vulnerability Scanning</span>
+              <span class="tool-category-count" id="count-sca">6 tools</span>
+            </div>
+            <div class="tool-grid" id="grid-sca"></div>
+          </div>
+
+          <div class="tool-category" data-category="secrets">
+            <div class="tool-category-header">
+              <span class="tool-category-title">Secrets Detection</span>
+              <span class="tool-category-count" id="count-secrets">3 tools</span>
+            </div>
+            <div class="tool-grid" id="grid-secrets"></div>
+          </div>
+
+          <div class="tool-category" data-category="logs">
+            <div class="tool-category-header">
+              <span class="tool-category-title">Log Aggregation</span>
+              <span class="tool-category-count" id="count-logs">2 tools</span>
+            </div>
+            <div class="tool-grid" id="grid-logs"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="right-section flex-col gap-6">
+
+        <div class="card glass status-details-card">
+          <div class="card-header">
+            <h3>Consolidation Impact</h3>
+            <span class="pulse-ring running-only"></span>
+          </div>
+          <div class="eval-stats-container">
+            <div class="stat-box">
+              <span class="stat-label">Tools in Stack</span>
+              <span class="stat-value" id="current-scenario-index">11</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-label">Severity Verdicts</span>
+              <span class="stat-value" id="current-trajectory-score">3</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-label">Vendors Removed</span>
+              <span class="stat-value" id="current-rouge-score">0</span>
+            </div>
+          </div>
+          <div class="progress-bar-container">
+            <div class="progress-info">
+              <span>Audit Progress</span>
+              <span id="progress-text">0 / 11 Tools Reviewed</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" id="pipeline-progress-fill" style="width: 0%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card terminal-card flex-grow flex-col">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span class="dot dot-red"></span>
+              <span class="dot dot-yellow"></span>
+              <span class="dot dot-green"></span>
+            </div>
+            <div class="terminal-title">bash - tool-inventory-audit</div>
+            <div class="terminal-actions">
+              <button id="btn-clear-console" title="Clear Console">🧹</button>
+            </div>
+          </div>
+          <div class="terminal-body" id="terminal-output">
+            <div class="terminal-line system-msg"># Tool inventory audit ready.</div>
+            <div class="terminal-line system-msg"># Click "Run Tool Audit" to walk the before/after coverage map.</div>
+            <div class="terminal-line cursor-line"><span class="prompt">$</span><span class="cursor">_</span></div>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+  </div>
+
+  <script src="./app.js"></script>
+</body></html>
